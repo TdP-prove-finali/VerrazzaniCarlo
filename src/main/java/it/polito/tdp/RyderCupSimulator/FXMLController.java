@@ -1,6 +1,7 @@
 package it.polito.tdp.RyderCupSimulator;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -36,7 +37,11 @@ public class FXMLController {
     		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
     		return;
     	}
-    	List<Player>giocatori ;
+    	model.loadPlayers();
+    	List<Player>giocatori = new ArrayList<>(model.getPlayers());
+    	for(Player x : giocatori) {
+    		this.txtResult.setText(x.getNome()+" "+x.getCognome()+" "+x.getNazione());
+    	}
     	
     }
 

@@ -7,9 +7,10 @@ public class Player {
 	private Integer appearances;
 	private Integer posizioneRanking;
 	private Integer totaleIncassiAnno;
+	private Double mediaScore;
 	
 	public Player(String nome, String cognome, String nazione, Integer appearances, Integer posizioneRanking,
-			Integer totaleIncassiAnno) {
+			Integer totaleIncassiAnno, Double mediaScore) {
 		super();
 		this.nome = nome;
 		this.cognome = cognome;
@@ -17,6 +18,7 @@ public class Player {
 		this.appearances = appearances;
 		this.posizioneRanking = posizioneRanking;
 		this.totaleIncassiAnno = totaleIncassiAnno;
+		this.mediaScore = mediaScore;
 	}
 
 	public String getNome() {

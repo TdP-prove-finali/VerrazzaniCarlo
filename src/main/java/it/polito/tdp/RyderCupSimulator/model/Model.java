@@ -26,10 +26,31 @@ public class Model {
 	public void loadPlayers() {
 		this.players = new ArrayList<>(dao.getAllPlayers());
 	}
+
+	public RyderCupDAO getDao() {
+		return dao;
+	}
+
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	public Map<String, Player> getIdMapPlayers() {
+		return idMapPlayers;
+	}
+
+	public List<Player> getTeamEUR() {
+		return teamEUR;
+	}
+
+	public List<Player> getTeamUSA() {
+		return teamUSA;
+	}
 	
 	/*public List<Player>selezionaTeam(Integer nAppMin, List<Player>disponibili){//la lista disponibili contiene tutti i playerUSA se sto facendo il teamUSA, tutti quelli EURO se sto facendo team EURO
 		
 		return ;
 		
 	}*/
+	
 }
