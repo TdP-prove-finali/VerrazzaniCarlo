@@ -71,7 +71,7 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return nome + " " + cognome + " " + posizioneRanking + " (tot.Incassi= " +totaleIncassiAnno+") " + " (numApparizioni= " + this.appearances+ ") " +" [mediaScore= "+ this.mediaScore+ "] ";
+		return nome + " " + cognome + " " + posizioneRanking + " (tot.Incassi= " +totaleIncassiAnno+") " + " (numApparizioni= " + this.appearances+ ") " +" [mediaScore= "+ this.mediaScore+ "]\n";
 	}
 	
 	

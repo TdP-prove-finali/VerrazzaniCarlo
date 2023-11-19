@@ -31,6 +31,7 @@ public class FXMLController {
     void doGenerateMatchTable(ActionEvent event) {
     	String input = this.nAppearances.getText();
     	Integer nApparizioni;
+    	String s = "";
     	try {
     		nApparizioni = Integer.parseInt(input);
     	}catch(NumberFormatException e) {
@@ -40,8 +41,9 @@ public class FXMLController {
     	model.loadPlayers();
     	List<Player>giocatori = new ArrayList<>(model.getPlayers());
     	for(Player x : giocatori) {
-    		this.txtResult.setText(x.toString());
+    		s += x.toString();
     	}
+    	this.txtResult.setText(s);
     	
     }
 
