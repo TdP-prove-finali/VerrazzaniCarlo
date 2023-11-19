@@ -25,7 +25,7 @@ public class RyderCupDAO {
 				String nome = rs.getString("First Name");
 				String cognome = rs.getString("Last Name"); 
 				String nazione = rs.getString("CTRY");
-				Integer nApparizioni = rs.getInt("EVENTS PLAYED (ACTUAL)");
+				Integer nApparizioni = rs.getInt("EVENTS_PLAYED_ACTUAL");
 				Integer posizioneRanking = rs.getInt("RANKING");
 				Integer totaleIncassiAnno = this.getTotaleIncassi(nome, cognome);//per calcolo incassi posso usare come chiave primaria nomecognomenazionalita
 				Double mediaScore = this.getMediaScore(nome, cognome);
@@ -40,7 +40,41 @@ public class RyderCupDAO {
 			throw new RuntimeException("Error Connection Database");
 		}
 	}
-		
+	
+	public List<Player> getAllPlayersEUR(Integer n){
+		String query = "SELECT * "
+				+ "FROM owgr o "
+				+ "WHERE o.CTRY IN ( "
+				+ "    'Albania', 'Andorra', 'England', 'Northern Ireland', 'Austria', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland', 'Italy', 'Kazakhstan', 'Kosovo', 'Latvia', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 'Monaco', 'Montenegro', 'Netherlands', 'North Macedonia', 'Norway', 'Poland', 'Portugal', 'Romania', 'Russia', 'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom', 'Vatican City' "
+				+ ")"
+				+ "AND o.EVENTS_PLAYED_ACTUAL > ? "
+				+ "ORDER BY o.RANKING ";
+		List<Player> result = new ArrayList<Player>();
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(query);
+			st.setInt(1, n);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				String nome = rs.getString("First Name");
+				String cognome = rs.getString("Last Name"); 
+				String nazione = rs.getString("CTRY");
+				Integer nApparizioni = rs.getInt("EVENTS_PLAYED_ACTUAL");
+				Integer posizioneRanking = rs.getInt("RANKING");
+				Integer totaleIncassiAnno = this.getTotaleIncassi(nome, cognome);//per calcolo incassi posso usare come chiave primaria nomecognomenazionalita
+				Double mediaScore = this.getMediaScore(nome, cognome);
+				Player p = new Player(nome, cognome, nazione, nApparizioni, posizioneRanking, totaleIncassiAnno, mediaScore);
+				result.add(p);
+			}
+			conn.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+	}
 	private Double getMediaScore(String nome, String cognome) {
 		String query = "SELECT a.AVG "
 				+ "FROM scoringavgranking a "
@@ -68,7 +102,7 @@ public class RyderCupDAO {
 	public Integer getTotaleIncassi(String nome, String cognome){
 		String query = "SELECT m.EARNINGS "
 				+ "FROM moneylist m "
-				+ "WHERE m.NAME=? ";
+				+ "WHERE m.NAME = ? ";
 		
 		String fullNameX = nome+cognome;
 		String fullName = fullNameX.strip();
@@ -87,6 +121,39 @@ public class RyderCupDAO {
 			}
 			conn.close();
 			return totIncassi;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+	}
+
+	public List<Player> getAllPlayersUSA(Integer n) {
+		String query = "SELECT * "
+				+ "FROM owgr o "
+				+ "WHERE o.CTRY = 'United States' "
+				+ "AND o.EVENTS_PLAYED_ACTUAL > ? "
+				+ "ORDER BY o.RANKING ";
+		List<Player> result = new ArrayList<Player>();
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(query);
+			st.setInt(1, n);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				String nome = rs.getString("First Name");
+				String cognome = rs.getString("Last Name"); 
+				String nazione = rs.getString("CTRY");
+				Integer nApparizioni = rs.getInt("EVENTS_PLAYED_ACTUAL");
+				Integer posizioneRanking = rs.getInt("RANKING");
+				Integer totaleIncassiAnno = this.getTotaleIncassi(nome, cognome);//per calcolo incassi posso usare come chiave primaria nomecognomenazionalita
+				Double mediaScore = this.getMediaScore(nome, cognome);
+				Player p = new Player(nome, cognome, nazione, nApparizioni, posizioneRanking, totaleIncassiAnno, mediaScore);
+				result.add(p);
+			}
+			conn.close();
+			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("Errore connessione al database");

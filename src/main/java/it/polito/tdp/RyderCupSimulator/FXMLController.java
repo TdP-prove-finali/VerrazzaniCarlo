@@ -28,7 +28,7 @@ public class FXMLController {
     private TextArea txtResult;
 
     @FXML
-    void doGenerateMatchTable(ActionEvent event) {
+    void doGenerateMatchTable(ActionEvent event) {//per ora il metodo è impostato per stampare tutti i giocatori
     	String input = this.nAppearances.getText();
     	Integer nApparizioni;
     	String s = "";
@@ -39,7 +39,9 @@ public class FXMLController {
     		return;
     	}
     	model.loadPlayers();
-    	List<Player>giocatori = new ArrayList<>(model.getPlayers());
+    	model.loadPlayersEUR(nApparizioni);
+    	model.calcolaTeamUSA(nApparizioni);
+    	List<Player>giocatori = new ArrayList<>(model.getTeamUSA());
     	for(Player x : giocatori) {
     		s += x.toString();
     	}

@@ -14,6 +14,8 @@ public class Model {
 	private Map<String,Player>idMapPlayers;
 	private List<Player>teamEUR;//questo sarà il team Europeo selezionato
 	private List<Player>teamUSA;//questo sarà il team USA selezionato
+	private double salarioMaggiore;
+	private double mediaTeamTOP;
 
 	
 	public Model() {
@@ -25,6 +27,74 @@ public class Model {
 	
 	public void loadPlayers() {
 		this.players = new ArrayList<>(dao.getAllPlayers());
+	}
+	
+	public List<Player>loadPlayersEUR(Integer nMinA){
+		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersEUR(nMinA));
+		return disponibili;
+	}
+	
+	public List<Player>loadPlayersUSA(Integer nMinA){
+		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersUSA(nMinA));
+		return disponibili;
+	}
+	
+	public void  calcolaTeamUSA(Integer nMinA) {
+		this.salarioMaggiore = 0.0;
+		this.mediaTeamTOP = 0.0;
+		List<Player> rimanenti = new ArrayList<>(this.loadPlayersUSA(nMinA));
+		List<Player> parziale = new ArrayList<>();		
+		ricorsione(parziale, rimanenti, nMinA);
+	}
+	
+	
+	
+	private void ricorsione(List<Player> parziale, List<Player> rimanenti, Integer nMinA){
+		// Condizione Terminale
+		if (rimanenti.isEmpty()) {
+			//calcolo costo
+			double salario = getSalarioTeam(parziale);
+			double media = this.calcolaMediaTeam(parziale);
+			if (salario > this.salarioMaggiore && media < this.mediaTeamTOP) {
+				this.salarioMaggiore = salario;
+				this.mediaTeamTOP = media;
+				this.teamUSA = new ArrayList<Player>(parziale);
+			}
+			return;
+		}
+		
+		
+       	for (Player p : rimanenti) {
+ 			List<Player> currentRimanenti = new ArrayList<>(rimanenti);
+ 				parziale.add(p);
+ 				currentRimanenti.remove(p);
+ 				ricorsione(parziale, currentRimanenti, nMinA);
+ 				parziale.remove(parziale.size()-1);
+ 		}
+	}
+	
+	/**
+	 * Metodo che calcola il salario nell'anno di una lista di giocatori
+	 * Usato nella ricorsione, per calcolare il salario del Dream Team
+	 * @param team
+	 * @return*/
+	
+	private double getSalarioTeam(List<Player> team) {
+		double result = 0.0;
+		for (Player p : team) {
+			result += p.getTotaleIncassiAnno();
+		}
+		return result;
+	}
+	
+	private double calcolaMediaTeam(List<Player> team) {
+		double sum = 0.0;
+		double result = 0.0;
+		for (Player p : team) {
+			sum += p.getMediaScore();
+		}
+		result = sum/team.size();
+		return result;
 	}
 
 	public RyderCupDAO getDao() {
@@ -47,10 +117,6 @@ public class Model {
 		return teamUSA;
 	}
 	
-	/*public List<Player>selezionaTeam(Integer nAppMin, List<Player>disponibili){//la lista disponibili contiene tutti i playerUSA se sto facendo il teamUSA, tutti quelli EURO se sto facendo team EURO
-		
-		return ;
-		
-	}*/
+	
 	
 }

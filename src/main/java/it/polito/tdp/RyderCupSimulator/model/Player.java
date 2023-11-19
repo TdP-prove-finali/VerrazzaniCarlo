@@ -69,6 +69,14 @@ public class Player {
 		this.totaleIncassiAnno = totaleIncassiAnno;
 	}
 
+	public Double getMediaScore() {
+		return mediaScore;
+	}
+
+	public void setMediaScore(Double mediaScore) {
+		this.mediaScore = mediaScore;
+	}
+
 	@Override
 	public String toString() {
 		return nome + " " + cognome + " " + posizioneRanking + " (tot.Incassi= " +totaleIncassiAnno+") " + " (numApparizioni= " + this.appearances+ ") " +" [mediaScore= "+ this.mediaScore+ "]\n";
