@@ -40,7 +40,7 @@ public class FXMLController {
     	model.loadPlayers();
     	List<Player>giocatori = new ArrayList<>(model.getPlayers());
     	for(Player x : giocatori) {
-    		this.txtResult.setText(x.getNome()+" "+x.getCognome()+" "+x.getNazione());
+    		this.txtResult.setText(x.toString());
     	}
     	
     }

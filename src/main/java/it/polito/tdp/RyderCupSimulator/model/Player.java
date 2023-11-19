@@ -68,6 +68,11 @@ public class Player {
 	public void setTotaleIncassiAnno(Integer totaleIncassiAnno) {
 		this.totaleIncassiAnno = totaleIncassiAnno;
 	}
+
+	@Override
+	public String toString() {
+		return nome + " " + cognome + " " + posizioneRanking + " (tot.Incassi= " +totaleIncassiAnno+") " + " (numApparizioni= " + this.appearances+ ") " +" [mediaScore= "+ this.mediaScore+ "] ";
+	}
 	
 	
 

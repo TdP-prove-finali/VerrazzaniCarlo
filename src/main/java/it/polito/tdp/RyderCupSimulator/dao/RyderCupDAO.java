@@ -13,7 +13,8 @@ public class RyderCupDAO {
 
 	public List<Player> getAllPlayers(){
 		String query = "SELECT DISTINCT * "
-				+ "FROM owgr r ";
+				+ "FROM owgr r "
+		        + "ORDER BY r.RANKING ";
 		List<Player> result = new ArrayList<Player>();
 		try {
 			Connection conn = DBConnect.getConnection();
@@ -25,7 +26,7 @@ public class RyderCupDAO {
 				String cognome = rs.getString("Last Name"); 
 				String nazione = rs.getString("CTRY");
 				Integer nApparizioni = rs.getInt("EVENTS PLAYED (ACTUAL)");
-				Integer posizioneRanking = rs.getInt("RankPosition");
+				Integer posizioneRanking = rs.getInt("RANKING");
 				Integer totaleIncassiAnno = this.getTotaleIncassi(nome, cognome);//per calcolo incassi posso usare come chiave primaria nomecognomenazionalita
 				Double mediaScore = this.getMediaScore(nome, cognome);
 				Player p = new Player(nome, cognome, nazione, nApparizioni, posizioneRanking, totaleIncassiAnno, mediaScore);
