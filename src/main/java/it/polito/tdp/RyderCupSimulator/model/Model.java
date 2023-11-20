@@ -39,6 +39,27 @@ public class Model {
 		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersUSA(nMinA));
 		return disponibili;
 	}
+	public void  calcolaTeamEUR(Integer nMinA) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 7 giocatori per ranking: gli altri 5 sono scelti ricorsivamente
+		this.salarioMaggiore = 0.0;
+		this.mediaTeamTOP = 0.0;
+		List<Player> rimanenti = new ArrayList<>(this.loadPlayersEUR(nMinA));
+		List<Player> parziale = new ArrayList<>();
+		parziale.add(rimanenti.get(0));
+		parziale.add(rimanenti.get(1));
+		parziale.add(rimanenti.get(2));
+		parziale.add(rimanenti.get(3));
+		parziale.add(rimanenti.get(4));
+		parziale.add(rimanenti.get(5));
+		parziale.add(rimanenti.get(6));
+		rimanenti.remove(parziale.get(0));
+		rimanenti.remove(parziale.get(1));
+		rimanenti.remove(parziale.get(2));
+		rimanenti.remove(parziale.get(3));
+		rimanenti.remove(parziale.get(4));
+		rimanenti.remove(parziale.get(5));
+		rimanenti.remove(parziale.get(6));
+		ricorsione(parziale, rimanenti, nMinA);
+	}
 	
 	public void  calcolaTeamUSA(Integer nMinA) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 7 giocatori per ranking: gli altri 5 sono scelti ricorsivamente
 		this.salarioMaggiore = 0.0;
@@ -52,25 +73,25 @@ public class Model {
 		parziale.add(rimanenti.get(4));
 		parziale.add(rimanenti.get(5));
 		parziale.add(rimanenti.get(6));
-		rimanenti.remove(0);
-		rimanenti.remove(1);
-		rimanenti.remove(2);
-		rimanenti.remove(3);
-		rimanenti.remove(4);
-		rimanenti.remove(5);
-		rimanenti.remove(6);
+		rimanenti.remove(parziale.get(0));
+		rimanenti.remove(parziale.get(1));
+		rimanenti.remove(parziale.get(2));
+		rimanenti.remove(parziale.get(3));
+		rimanenti.remove(parziale.get(4));
+		rimanenti.remove(parziale.get(5));
+		rimanenti.remove(parziale.get(6));
 		ricorsione(parziale, rimanenti, nMinA);
 	}
 		
 	private void ricorsione(List<Player> parziale, List<Player> rimanenti, Integer nMinA){
 		// Condizione Terminale
 		if (parziale.size() == 12) {
-			//calcolo costo
+			//calcolo media e totIncassi
 			double salario = getSalarioTeam(parziale);
-			double media = this.calcolaMediaTeam(parziale);
+			//double media = this.calcolaMediaTeam(parziale);
 			if (salario > this.salarioMaggiore /*&& media < this.mediaTeamTOP*/) {
 				this.salarioMaggiore = salario;
-				//this.mediaTeamTOP = media;
+				// this.mediaTeamTOP = media;
 				this.teamUSA = new ArrayList<Player>(parziale);
 			}
 				return;
