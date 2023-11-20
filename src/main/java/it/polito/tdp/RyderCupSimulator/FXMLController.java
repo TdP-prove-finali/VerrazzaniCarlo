@@ -38,16 +38,9 @@ public class FXMLController {
     		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
     		return;
     	}
-    	model.loadPlayers();
     	model.loadPlayersEUR(nApparizioni);
-    	model.calcolaTeamUSA(nApparizioni);
-    	List<Player>giocatori = new ArrayList<>(model.getTeamUSA());
-    	for(Player x : giocatori) {
-    		s += x.toString();
-    	}
-    	this.txtResult.setText(s);
-    	
     }
+    	
 
     @FXML
     void doSelectTeamEurope(ActionEvent event) {
@@ -56,7 +49,21 @@ public class FXMLController {
 
     @FXML
     void doSelectTeamUSA(ActionEvent event) {
-
+    	String input = this.nAppearances.getText();
+    	Integer nApparizioni;
+    	String s = "";
+    	try {
+    		nApparizioni = Integer.parseInt(input);
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
+    		return;
+    	}
+    	model.calcolaTeamUSA(nApparizioni);
+    	List<Player>giocatori = new ArrayList<>(model.getTeamUSA());
+    	for(Player x : giocatori) {
+    		s += x.toString();
+    	}
+    	this.txtResult.setText(s);
     }
 
     @FXML

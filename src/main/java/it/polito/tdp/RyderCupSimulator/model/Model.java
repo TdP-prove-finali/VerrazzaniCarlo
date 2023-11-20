@@ -11,22 +11,23 @@ public class Model {
 	
 	private RyderCupDAO dao;
 	private List<Player>players;
-	private Map<String,Player>idMapPlayers;
+	private Map<Integer,Player>idMapPlayers;
 	private List<Player>teamEUR;//questo sarà il team Europeo selezionato
 	private List<Player>teamUSA;//questo sarà il team USA selezionato
+	private List<Player>listaUSA;//sono tutti i players USA
+	private List<Player>listaEUR;//sono tutti i playrs EUR
 	private double salarioMaggiore;
 	private double mediaTeamTOP;
 
-	
 	public Model() {
 		this.dao = new RyderCupDAO();
 		this.teamEUR = new ArrayList<>();
 		this.teamUSA = new ArrayList<>();
-		this.idMapPlayers = new HashMap<>();
-	}
-	
-	public void loadPlayers() {
 		this.players = new ArrayList<>(dao.getAllPlayers());
+		/*this.idMapPlayers = new HashMap<>();
+		for(Player p : this.players) {
+			this.idMapPlayers.put(p.getPosizioneRanking(), p);
+		}*/
 	}
 	
 	public List<Player>loadPlayersEUR(Integer nMinA){
@@ -39,31 +40,41 @@ public class Model {
 		return disponibili;
 	}
 	
-	public void  calcolaTeamUSA(Integer nMinA) {
+	public void  calcolaTeamUSA(Integer nMinA) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 7 giocatori per ranking: gli altri 5 sono scelti ricorsivamente
 		this.salarioMaggiore = 0.0;
 		this.mediaTeamTOP = 0.0;
 		List<Player> rimanenti = new ArrayList<>(this.loadPlayersUSA(nMinA));
-		List<Player> parziale = new ArrayList<>();		
+		List<Player> parziale = new ArrayList<>();
+		parziale.add(rimanenti.get(0));
+		parziale.add(rimanenti.get(1));
+		parziale.add(rimanenti.get(2));
+		parziale.add(rimanenti.get(3));
+		parziale.add(rimanenti.get(4));
+		parziale.add(rimanenti.get(5));
+		parziale.add(rimanenti.get(6));
+		rimanenti.remove(0);
+		rimanenti.remove(1);
+		rimanenti.remove(2);
+		rimanenti.remove(3);
+		rimanenti.remove(4);
+		rimanenti.remove(5);
+		rimanenti.remove(6);
 		ricorsione(parziale, rimanenti, nMinA);
 	}
-	
-	
-	
+		
 	private void ricorsione(List<Player> parziale, List<Player> rimanenti, Integer nMinA){
 		// Condizione Terminale
-		if (rimanenti.isEmpty()) {
+		if (parziale.size() == 12) {
 			//calcolo costo
 			double salario = getSalarioTeam(parziale);
 			double media = this.calcolaMediaTeam(parziale);
-			if (salario > this.salarioMaggiore && media < this.mediaTeamTOP) {
+			if (salario > this.salarioMaggiore /*&& media < this.mediaTeamTOP*/) {
 				this.salarioMaggiore = salario;
-				this.mediaTeamTOP = media;
+				//this.mediaTeamTOP = media;
 				this.teamUSA = new ArrayList<Player>(parziale);
 			}
-			return;
-		}
-		
-		
+				return;
+		}		
        	for (Player p : rimanenti) {
  			List<Player> currentRimanenti = new ArrayList<>(rimanenti);
  				parziale.add(p);
@@ -72,12 +83,6 @@ public class Model {
  				parziale.remove(parziale.size()-1);
  		}
 	}
-	
-	/**
-	 * Metodo che calcola il salario nell'anno di una lista di giocatori
-	 * Usato nella ricorsione, per calcolare il salario del Dream Team
-	 * @param team
-	 * @return*/
 	
 	private double getSalarioTeam(List<Player> team) {
 		double result = 0.0;
@@ -105,7 +110,7 @@ public class Model {
 		return players;
 	}
 
-	public Map<String, Player> getIdMapPlayers() {
+	public Map<Integer, Player> getIdMapPlayers() {
 		return idMapPlayers;
 	}
 
