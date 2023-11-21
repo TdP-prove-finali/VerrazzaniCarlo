@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.RyderCupSimulator.model.MatchDoppio;
+import it.polito.tdp.RyderCupSimulator.model.MatchSingolo;
 import it.polito.tdp.RyderCupSimulator.model.Model;
 import it.polito.tdp.RyderCupSimulator.model.Player;
 import javafx.event.ActionEvent;
@@ -29,16 +31,25 @@ public class FXMLController {
 
     @FXML
     void doGenerateMatchTable(ActionEvent event) {//per ora il metodo è impostato per stampare tutti i giocatori
-    	String input = this.nAppearances.getText();
-    	Integer nApparizioni;
-    	String s = "";
-    	try {
-    		nApparizioni = Integer.parseInt(input);
-    	}catch(NumberFormatException e) {
-    		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
-    		return;
+    	model.generaCalendarioDay1e2();
+    	model.generaCalendarioDay3();
+    	String s = "\nDay1:\n";
+    	List<MatchDoppio>calDay1 = new ArrayList<>(model.getMatchesDay1());
+    	List<MatchDoppio>calDay2 = new ArrayList<>(model.getMatchesDay1());
+    	List<MatchSingolo>calDay3 = new ArrayList<>(model.getMatchesDay3());
+    	for(MatchDoppio x : calDay1) {
+    		s += x.toString();
     	}
-    	model.loadPlayersEUR(nApparizioni);
+    	s += "\nDay2:\n";
+    	for(MatchDoppio x : calDay1) {
+    		s += x.toString();
+    	}
+    	
+    	s += "\nDay3:\n";
+    	for(MatchSingolo x : calDay3) {
+    		s += x.toString();
+    	}
+    	this.txtResult.appendText(s);
     }
     	
 
@@ -53,8 +64,8 @@ public class FXMLController {
     		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
     		return;
     	}
-    	model.calcolaTeamEUR(nApparizioni);
-    	List<Player>giocatori = new ArrayList<>(model.getTeamUSA());
+    	
+    	List<Player>giocatori = new ArrayList<>(model.calcolaTeamEUR(nApparizioni));
     	for(Player x : giocatori) {
     		s += x.toString();
     	}
@@ -72,8 +83,8 @@ public class FXMLController {
     		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
     		return;
     	}
-    	model.calcolaTeamUSA(nApparizioni);
-    	List<Player>giocatori = new ArrayList<>(model.getTeamUSA());
+    	
+    	List<Player>giocatori = new ArrayList<>(model.calcolaTeamUSA(nApparizioni));
     	for(Player x : giocatori) {
     		s += x.toString();
     	}
