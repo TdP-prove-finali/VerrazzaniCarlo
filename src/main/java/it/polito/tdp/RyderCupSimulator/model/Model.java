@@ -58,25 +58,39 @@ public class Model {
 		}
 		return disponibili;
 	}
-	public List<Player> calcolaTeamEUR(Integer nMinA) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 7 giocatori per ranking: gli altri 5 sono scelti ricorsivamente
+	public List<Player> calcolaTeamEUR(Integer nMinA) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 5 giocatori per ranking e 4 a caso tra i migliori 20(esclusi i primi 5): gli altri 3 sono scelti ricorsivamente
 		this.salarioMaggiore = 0.0;
 		this.mediaTeamTOP = 0.0;
 		List<Player> rimanenti = new ArrayList<>(this.loadPlayersEUR(nMinA));
 		List<Player> parziale = new ArrayList<>();
-		parziale.add(rimanenti.get(0));
-		parziale.add(rimanenti.get(1));
+		parziale.add(rimanenti.get(0));//essendo parziale ordinato per ranking: prendo i primi 7.
+		parziale.add(rimanenti.get(1));//prendo inoltre 2 player a caso tra i migliori 20 EUR.
 		parziale.add(rimanenti.get(2));
 		parziale.add(rimanenti.get(3));
 		parziale.add(rimanenti.get(4));
-		parziale.add(rimanenti.get(5));
-		parziale.add(rimanenti.get(6));
+		//parziale.add(rimanenti.get(5));
+		//parziale.add(rimanenti.get(6));
 		rimanenti.remove(parziale.get(0));
 		rimanenti.remove(parziale.get(1));
 		rimanenti.remove(parziale.get(2));
 		rimanenti.remove(parziale.get(3));
 		rimanenti.remove(parziale.get(4));
-		rimanenti.remove(parziale.get(5));
-		rimanenti.remove(parziale.get(6));
+		//rimanenti.remove(parziale.get(5));
+		//rimanenti.remove(parziale.get(6));
+		
+		List<Player>top20 = new ArrayList<>();
+		for(int i = 0; i<20; i++) {
+			Player a = rimanenti.get(i);
+			top20.add(a);
+		}
+		for(int i = 0; i<4; i++) {
+			Integer n = (int) (Math.random()*top20.size());
+			Player b = top20.get(n);
+			parziale.add(b);
+			rimanenti.remove(b);
+			top20.remove(b);
+		}
+		
 		ricorsioneEUR(parziale, rimanenti, nMinA);//devo far si che questo metodo ritorni la lista di giocatori eu
 		return this.teamEUR;
 	}
@@ -91,15 +105,27 @@ public class Model {
 		parziale.add(rimanenti.get(2));
 		parziale.add(rimanenti.get(3));
 		parziale.add(rimanenti.get(4));
-		parziale.add(rimanenti.get(5));
-		parziale.add(rimanenti.get(6));
+		//parziale.add(rimanenti.get(5));
+		//parziale.add(rimanenti.get(6));
 		rimanenti.remove(parziale.get(0));
 		rimanenti.remove(parziale.get(1));
 		rimanenti.remove(parziale.get(2));
 		rimanenti.remove(parziale.get(3));
 		rimanenti.remove(parziale.get(4));
-		rimanenti.remove(parziale.get(5));
-		rimanenti.remove(parziale.get(6));
+		//rimanenti.remove(parziale.get(5));
+		//rimanenti.remove(parziale.get(6));
+		List<Player>top20 = new ArrayList<>();
+		for(int i = 0; i<20; i++) {
+			Player a = rimanenti.get(i);
+			top20.add(a);
+		}
+		for(int i = 0; i<4; i++) {
+			Integer n = (int) (Math.random()*top20.size());
+			Player b = top20.get(n);
+			parziale.add(b);
+			rimanenti.remove(b);
+			top20.remove(b);
+		}
 		ricorsioneUSA(parziale, rimanenti, nMinA);//devo far si che questo metodo ritorni la lista di giocatori USA
 		return this.teamUSA;
 	}
