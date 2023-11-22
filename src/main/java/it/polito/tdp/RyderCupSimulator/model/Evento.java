@@ -85,12 +85,6 @@ package it.polito.tdp.RyderCupSimulator.model;
 		}
 		
 		@Override
-		public String toString() {
-			return "Evento [day=" + day + ", player1=" + player1 + ", player2=" + player2 + ", player3=" + player3
-					+ ", player4=" + player4 + ", score1=" + score1 + ", score2=" + score2 + ", punteggio=" + punteggio
-					+ "]";
-		}
-		@Override
 		public int compareTo(Evento o) {
 			return this.day-o.day;
 		}

@@ -19,7 +19,8 @@ public class Model {
 	private double salarioMaggiore;
 	private double mediaTeamTOP;
 	private List<MatchDoppio>matchesDay1;
-	private ArrayList<MatchSingolo> matchesDay3;
+	private List<MatchDoppio> matchesDay2;
+	private List<MatchSingolo> matchesDay3;
 
 	public Model() {
 		this.dao = new RyderCupDAO();
@@ -164,7 +165,7 @@ public class Model {
 		return result;
 	}
 	
-	public void generaCalendarioDay1e2() {
+	public void generaCalendarioDay1() {
 		this.matchesDay1 = new ArrayList<>();
 		Player Player0EUR = this.teamEUR.get(0);
 		Player Player1EUR = this.teamEUR.get(1);
@@ -208,6 +209,52 @@ public class Model {
 		matchesDay1.add(m5);
 		matchesDay1.add(m6);
 		matchesDay1.add(m7);
+	}
+	
+	public void generaCalendarioDay2() {
+		this.matchesDay2 = new ArrayList<>();
+		Player Player0EUR = this.teamEUR.get(0);
+		Player Player1EUR = this.teamEUR.get(1);
+		Player Player2EUR = this.teamEUR.get(2);
+		Player Player3EUR = this.teamEUR.get(3);
+		Player Player4EUR = this.teamEUR.get(4);
+		Player Player5EUR = this.teamEUR.get(5);
+		Player Player6EUR = this.teamEUR.get(6);
+		Player Player7EUR = this.teamEUR.get(7);
+		Player Player8EUR = this.teamEUR.get(8);
+		Player Player9EUR = this.teamEUR.get(9);
+		Player Player10EUR = this.teamEUR.get(10);
+		Player Player11EUR = this.teamEUR.get(11);
+		
+		Player Player0USA = this.teamUSA.get(0);
+		Player Player1USA = this.teamUSA.get(1);
+		Player Player2USA = this.teamUSA.get(2);
+		Player Player3USA = this.teamUSA.get(3);
+		Player Player4USA = this.teamUSA.get(4);
+		Player Player5USA = this.teamUSA.get(5);
+		Player Player6USA = this.teamUSA.get(6);
+		Player Player7USA = this.teamUSA.get(7);
+		Player Player8USA = this.teamUSA.get(8);
+		Player Player9USA = this.teamUSA.get(9);
+		Player Player10USA = this.teamUSA.get(10);
+		Player Player11USA = this.teamUSA.get(11);
+		
+		MatchDoppio m0 = new MatchDoppio(Player0EUR, Player11EUR, Player0USA, Player11USA, 0.0, 0.0, 0);
+		MatchDoppio m1 = new MatchDoppio(Player1EUR, Player10EUR, Player1USA, Player10USA, 0.0, 0.0, 0);
+		MatchDoppio m2 = new MatchDoppio(Player2EUR, Player9EUR, Player2USA, Player9USA, 0.0, 0.0, 0);
+		MatchDoppio m3 = new MatchDoppio(Player3EUR, Player8EUR, Player3USA, Player8USA, 0.0, 0.0, 0);
+		MatchDoppio m4 = new MatchDoppio(Player4EUR, Player7EUR, Player4USA, Player7USA, 0.0, 0.0, 0);
+		MatchDoppio m5 = new MatchDoppio(Player5EUR, Player6EUR, Player5USA, Player6USA, 0.0, 0.0, 0);
+		MatchDoppio m6 = new MatchDoppio(Player0EUR, Player3EUR, Player0USA, Player3USA, 0.0, 0.0, 0);
+		MatchDoppio m7 = new MatchDoppio(Player1EUR, Player2EUR, Player1USA, Player2USA, 0.0, 0.0, 0);
+		matchesDay2.add(m0);
+		matchesDay2.add(m1);
+		matchesDay2.add(m2);
+		matchesDay2.add(m3);
+		matchesDay2.add(m4);
+		matchesDay2.add(m5);
+		matchesDay2.add(m6);
+		matchesDay2.add(m7);
 	}
 	public void generaCalendarioDay3() {
 		this.matchesDay3 = new ArrayList<>();
@@ -264,6 +311,14 @@ public class Model {
 		matchesDay3.add(ms11);
 		
 	}
+	
+	public SimResult simula(List<MatchDoppio>matchesDay1, List<MatchDoppio>matchesDay2, List<MatchSingolo>matchesDay3) {
+		Simulator sim = new Simulator(matchesDay1, matchesDay2, matchesDay3);
+		sim.initialize();
+		sim.run();
+		SimResult res = sim.getRisultato();
+		return res;
+	}
 
 	public RyderCupDAO getDao() {
 		return dao;
@@ -289,7 +344,11 @@ public class Model {
 		return matchesDay1;
 	}
 
-	public ArrayList<MatchSingolo> getMatchesDay3() {
+	public List<MatchDoppio> getMatchesDay2() {
+		return matchesDay2;
+	}
+
+	public List<MatchSingolo> getMatchesDay3() {
 		return matchesDay3;
 	}
 	

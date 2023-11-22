@@ -1,5 +1,6 @@
 package it.polito.tdp.RyderCupSimulator.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -20,6 +21,8 @@ public class Simulator {
 			private List<MatchDoppio>risultatiDay1;
 			private List<MatchDoppio>risultatiDay2;
 			private List<MatchSingolo>risultatiDay3;
+			private Double puntiEUR;
+			private Double puntiUSA;
 			private int scoreActual;//è il risultato fino a quando si è simulata la partita
 			
 			//stato del mondo
@@ -43,13 +46,17 @@ public class Simulator {
 			 */
 			public void initialize() {
 				this.queue = new PriorityQueue<Evento>();
-				
+				this.risultatiDay1 = new ArrayList<>();
+				this.risultatiDay2 = new ArrayList<>();
+				this.risultatiDay3 = new ArrayList<>();
 				//eventi matchDay1
 				for (MatchDoppio x : this.calendarioDay1) {
 					Double scoreEUR = (x.getPlayer1EUR().getMediaScore()+x.getPlayer2EUR().getMediaScore())/2+Math.random()*4-Math.random()*4;
 					Double scoreUSA = (x.getPlayer1USA().getMediaScore()+x.getPlayer2USA().getMediaScore())/2+Math.random()*4-Math.random()*4;
 					Integer punteggioMatch = (int) (scoreEUR-scoreUSA);
+					MatchDoppio m = new MatchDoppio(x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch);
 					this.queue.add(new Evento(EventType.MATCHDOPPIO, 1, x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch));
+					this.risultatiDay1.add(m);
 				}
 				
 				//eventi match Day2
@@ -57,51 +64,68 @@ public class Simulator {
 					Double scoreEUR = (x.getPlayer1EUR().getMediaScore()+x.getPlayer2EUR().getMediaScore())/2+Math.random()*4-Math.random()*4;
 					Double scoreUSA = (x.getPlayer1USA().getMediaScore()+x.getPlayer2USA().getMediaScore())/2+Math.random()*4-Math.random()*4;
 					Integer punteggioMatch = (int) (scoreEUR-scoreUSA);
+					MatchDoppio m = new MatchDoppio(x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch);
 					this.queue.add(new Evento(EventType.MATCHDOPPIO, 2, x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch));
+					this.risultatiDay2.add(m);
 				}
 				//eventi match Day3
 				for (MatchSingolo x : this.calendarioDay3) {
 					Double scoreEUR = (x.getPlayerEUR().getMediaScore()+Math.random()*4-Math.random()*4);
 					Double scoreUSA = (x.getPlayerUSA().getMediaScore()+Math.random()*4-Math.random()*4);
 					Integer punteggioMatch = (int) (scoreEUR-scoreUSA);
+					MatchSingolo m = new MatchSingolo(x.getPlayerEUR(), x.getPlayerUSA(), scoreEUR, scoreUSA, punteggioMatch);
 					this.queue.add(new Evento(EventType.MATCHSINGOLO, 3, x.getPlayerEUR(), x.getPlayerUSA(), null, null, scoreEUR, scoreUSA, punteggioMatch));
+					this.risultatiDay3.add(m);
 				}
 
 			}
 			
 			public void run() {
-				
+				this.puntiEUR = 0.0;
+				this.puntiUSA = 0.0;
 				while(!queue.isEmpty()) {
 					Evento e = queue.poll();
-					System.out.print(e.toString());
-					/*switch(e.getType()) {
+					switch(e.getType()) {
 					case MATCHDOPPIO:
-						
-						break;
-					case VENDITA:
-						this.clientiTot++;
-						if (Q >= 0.9*avgQ) {
-							this.clientiSoddisfatti++;
+						System.out.print("(Day:"+e.getDay()+"): ["+e.getPlayer1().getNome()+ e.getPlayer1().getCognome()+"+"+ e.getPlayer2().getNome()+e.getPlayer2().getCognome()+"] vs"+" ["+e.getPlayer3().getNome()+ e.getPlayer3().getCognome()+"+"+ e.getPlayer4().getNome()+e.getPlayer4().getCognome()+"] result: "+e.getPunteggio()+"\n");
+						if(e.getPunteggio()>0) {
+							this.puntiUSA += 1.0;
 						}
-						if(Q >=avgQ) {
-							this.ricavo += this.prezzoUnitario*avgQ;
-							Q-=avgQ;
-						}else {
-							Q = 0;
-							this.ricavo += this.prezzoUnitario*Q;
+						if(e.getPunteggio()<0) {
+							this.puntiEUR += 1.0;
+						}
+						if(e.getPunteggio()==0) {
+							this.puntiUSA += 0.5;
+							this.puntiEUR += 0.5;
+						}
+						break;
+					case MATCHSINGOLO:
+						System.out.print("(Day:"+e.getDay()+"): "+e.getPlayer1().getNome()+ e.getPlayer1().getCognome()+" vs "+ e.getPlayer2().getNome()+e.getPlayer2().getCognome()+" result: "+e.getPunteggio()+"\n");
+						if(e.getPunteggio()>0) {
+							this.puntiUSA += 1.0;
+						}
+						if(e.getPunteggio()<0) {
+							this.puntiEUR += 1.0;
+						}
+						if(e.getPunteggio()==0) {
+							this.puntiUSA += 0.5;
+							this.puntiEUR += 0.5;
 						}
 						break;
 					default:
 						break;
-					}*/
+					}
 				}
+				System.out.println("punti EUR: "+this.puntiEUR+" puntiUSA: "+this.puntiUSA);
 			}
 			
-			/*public SimResult getRisultato() {
-				double ricavo = this.ricavo;
-				double costo = this.costo;
-				double percentClientiSodd = (double)(this.clientiSoddisfatti*100)/this.clientiTot;
-				SimResult res = new SimResult(costo, ricavo, percentClientiSodd);
+			public SimResult getRisultato() {
+				double punteggioEUR = this.puntiEUR;
+				double punteggioUSA = this.puntiUSA;
+				List<MatchDoppio>risultatiDay1 = new ArrayList<>(this.risultatiDay1);
+				List<MatchDoppio>risultatiDay2 = new ArrayList<>(this.risultatiDay2);
+				List<MatchSingolo>risultatiDay3 = new ArrayList<>(this.risultatiDay3);
+				SimResult res = new SimResult(punteggioEUR, punteggioUSA, risultatiDay1, risultatiDay2, risultatiDay3);
 				return res;
-			}*/
+			}
 }
