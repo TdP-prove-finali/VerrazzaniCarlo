@@ -12,10 +12,13 @@ import it.polito.tdp.RyderCupSimulator.model.Player;
 import it.polito.tdp.RyderCupSimulator.model.SimResult;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class FXMLController {
+
 	private Model model;
 
     @FXML
@@ -25,13 +28,39 @@ public class FXMLController {
     private URL location;
 
     @FXML
+    private ComboBox<String> boxPlayer;
+
+    @FXML
+    private Button btnCalcolaStats;
+
+    @FXML
+    private Button btnSimulateMatches;
+
+    @FXML
     private TextField nAppearances;
 
     @FXML
-    private TextArea txtResult;
+    private TextArea txtCalendar;
 
     @FXML
-    void doGenerateMatchTable(ActionEvent event) {//per ora il metodo è impostato per stampare tutti i giocatori
+    private TextArea txtEUR;
+
+    @FXML
+    private TextArea txtStatsPlayer;
+
+    @FXML
+    private TextArea txtUSA;
+
+    @FXML
+    void doGenerateMatchTable(ActionEvent event) {
+    	if(model.getTeamEUR().isEmpty()) {
+    		this.txtCalendar.setText("Select European Team");
+    		return;
+    	}
+    	if(model.getTeamUSA().isEmpty()) {
+    		this.txtCalendar.setText("Select American Team");
+    		return;
+    	}
     	model.generaCalendarioDay1();
     	model.generaCalendarioDay2();
     	model.generaCalendarioDay3();
@@ -51,19 +80,27 @@ public class FXMLController {
     	for(MatchSingolo x : calDay3) {
     		s += x.toString();
     	}
-    	this.txtResult.appendText(s);
+    	this.txtCalendar.setText(s);
+    	for(Player x : model.getTeamEUR()) {
+    		String nomeCogn = x.getNome()+x.getCognome();
+    		this.boxPlayer.getItems().add(nomeCogn);
+    	}
+    	for(Player x : model.getTeamUSA()) {
+    		String nomeCogn = x.getNome()+x.getCognome();
+    		this.boxPlayer.getItems().add(nomeCogn);
+    	}
+    this.btnSimulateMatches.setDisable(false);
     }
-    	
 
     @FXML
     void doSelectTeamEurope(ActionEvent event) {
-    	String input = this.nAppearances.getText();
+    String input = this.nAppearances.getText();
     	Integer nApparizioni;
     	String s = "\nTEAM EUROPE:\n";
     	try {
     		nApparizioni = Integer.parseInt(input);
     	}catch(NumberFormatException e) {
-    		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
+    		this.txtEUR.setText("Inserire un numero nel campo numeroApparizioni");
     		return;
     	}
     	
@@ -71,18 +108,18 @@ public class FXMLController {
     	for(Player x : giocatori) {
     		s += x.toString();
     	}
-    	this.txtResult.appendText(s);
+    	this.txtEUR.appendText(s);
     }
 
     @FXML
     void doSelectTeamUSA(ActionEvent event) {
-    	String input = this.nAppearances.getText();
+    String input = this.nAppearances.getText();
     	Integer nApparizioni;
     	String s = "\nTEAM USA:\n";
     	try {
     		nApparizioni = Integer.parseInt(input);
     	}catch(NumberFormatException e) {
-    		this.txtResult.setText("Inserire un numero nel campo numeroApparizioni");
+    		this.txtUSA.setText("Inserire un numero nel campo numeroApparizioni");
     		return;
     	}
     	
@@ -90,12 +127,12 @@ public class FXMLController {
     	for(Player x : giocatori) {
     		s += x.toString();
     	}
-    	this.txtResult.appendText(s);
+    	this.txtUSA.appendText(s);
     }
 
     @FXML
-    void doSimulateDay1(ActionEvent event) {
-    	SimResult res = model.simula(model.getMatchesDay1(), model.getMatchesDay2(), model.getMatchesDay3());
+    void doSimulateMatches(ActionEvent event) {
+    SimResult res = model.simula(model.getMatchesDay1(), model.getMatchesDay2(), model.getMatchesDay3());
     	String s = "\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
     	for(MatchDoppio m: res.getRisultatiDay1()) {
     		String risMatch = "";
@@ -141,23 +178,32 @@ public class FXMLController {
     		}
     		s+= "(Day:3) " + "["+m.getPlayerEUR().getNome()+m.getPlayerEUR().getCognome()+"] vs"+" ["+m.getPlayerUSA().getNome()+ m.getPlayerUSA().getCognome()+"] result: "+risMatch+"\n";
     	}
-    	this.txtResult.appendText(s);
+    	this.txtCalendar.appendText(s);
+    	this.boxPlayer.setDisable(false);
+    	this.btnCalcolaStats.setDisable(false);
     }
+    
+    
 
     @FXML
-    void doSimulateDay2(ActionEvent event) {
-
+    void doCalcolaStats(ActionEvent event) {
+    	String nomeCognome = this.boxPlayer.getValue();
+    	String res = ""; 
+    	res = this.model.satsPlayer(nomeCognome);
+    	this.txtStatsPlayer.setText(res);
     }
 
-    @FXML
-    void doSimulateDay3(ActionEvent event) {
-
-    }
 
     @FXML
     void initialize() {
-        assert nAppearances != null : "fx:id=\"nAppearances\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Scene.fxml'.";
+    	 assert boxPlayer != null : "fx:id=\"boxPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
+         assert btnCalcolaStats != null : "fx:id=\"btnCalcolaStats\" was not injected: check your FXML file 'Scene.fxml'.";
+         assert btnSimulateMatches != null : "fx:id=\"btnSimulateMatches\" was not injected: check your FXML file 'Scene.fxml'.";
+         assert nAppearances != null : "fx:id=\"nAppearances\" was not injected: check your FXML file 'Scene.fxml'.";
+         assert txtCalendar != null : "fx:id=\"txtCalendar\" was not injected: check your FXML file 'Scene.fxml'.";
+         assert txtEUR != null : "fx:id=\"txtEUR\" was not injected: check your FXML file 'Scene.fxml'.";
+         assert txtStatsPlayer != null : "fx:id=\"txtStatsPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
+         assert txtUSA != null : "fx:id=\"txtUSA\" was not injected: check your FXML file 'Scene.fxml'.";
 
     }
 

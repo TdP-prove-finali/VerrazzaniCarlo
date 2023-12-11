@@ -59,8 +59,10 @@ public class MatchSingolo {
 
 	@Override
 	public String toString() {
-		return playerEUR.getNome()+" "+playerEUR.getCognome()+" vs "+playerUSA.getNome()+playerUSA.getCognome()+"\n";
+		return playerEUR.getNome()+playerEUR.getCognome()+" vs "+playerUSA.getNome()+playerUSA.getCognome()+"\n";
 	}
 	
-	
+	public String toStringSenzaACapo() {
+		return playerEUR.getNome()+playerEUR.getCognome()+" vs "+playerUSA.getNome()+playerUSA.getCognome();
+	}
 }

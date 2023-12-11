@@ -11,7 +11,7 @@ public class Model {
 	
 	private RyderCupDAO dao;
 	private List<Player>players;
-	private Map<Integer,Player>idMapPlayers;
+	private Map<String,Player>idMapPlayers;
 	private List<Player>teamEUR;//questo sarà il team Europeo selezionato
 	private List<Player>teamUSA;//questo sarà il team USA selezionato
 	private List<Player>listaUSA;//sono tutti i players USA
@@ -21,21 +21,24 @@ public class Model {
 	private List<MatchDoppio>matchesDay1;
 	private List<MatchDoppio> matchesDay2;
 	private List<MatchSingolo> matchesDay3;
+	private List<MatchDoppio>risultatiDay1;
+	private List<MatchDoppio>risultatiDay2;
+	private List<MatchSingolo>risultatiDay3;
 
 	public Model() {
 		this.dao = new RyderCupDAO();
 		this.teamEUR = new ArrayList<>();
 		this.teamUSA = new ArrayList<>();
-		//this.players = new ArrayList<>(dao.getAllPlayers());
-		/*this.idMapPlayers = new HashMap<>();
+		this.players = new ArrayList<>(dao.getAllPlayers());
+		this.idMapPlayers = new HashMap<>();
 		for(Player p : this.players) {
-			this.idMapPlayers.put(p.getPosizioneRanking(), p);
-		}*/
+			String fullName = p.getNome()+p.getCognome();
+			this.idMapPlayers.put(fullName, p);
+		}
 	}
 	
 	public List<Player>loadPlayersEUR(Integer nMinA){//prendo solo players con media diversa da zero(senno è un casino)
 		//a sto punto mi conviene aggiungere un database nella tabella con gli incassi degli europei(molti hanno 0 $ in PGA)
-		//https://golftoday.co.uk/european-tour-career-money-list/    questo è il db da aggiungere
 		
 		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersEUR(nMinA));
 		List<Player>disponibili2 = new ArrayList<>(disponibili);
@@ -130,7 +133,7 @@ public class Model {
 		return this.teamUSA;
 	}
 		
-	private void ricorsioneUSA(List<Player> parziale, List<Player> rimanenti, Integer nMinA){
+	private void ricorsioneUSA(List<Player> parziale, List<Player> rimanenti, Integer nMinA){//errore sulla media...
 		// Condizione Terminale
 		if (parziale.size() == 12) {
 			//calcolo media e totIncassi
@@ -138,7 +141,7 @@ public class Model {
 			//double media = this.calcolaMediaTeam(parziale);
 			if (salario > this.salarioMaggiore /*&& media < this.mediaTeamTOP*/) {
 				this.salarioMaggiore = salario;
-				// this.mediaTeamTOP = media;
+				//this.mediaTeamTOP = media;
 				this.teamUSA = new ArrayList<Player>(parziale);
 			}
 				return;
@@ -158,9 +161,9 @@ public class Model {
 			//calcolo media e totIncassi
 			double salario = getSalarioTeam(parziale);
 			//double media = this.calcolaMediaTeam(parziale);
-			if (salario > this.salarioMaggiore /*&& media < this.mediaTeamTOP*/) {
+			if (salario > this.salarioMaggiore/* && media < this.mediaTeamTOP*/) {
 				this.salarioMaggiore = salario;
-				// this.mediaTeamTOP = media;
+			   // this.mediaTeamTOP = media;
 				this.teamEUR = new ArrayList<Player>(parziale);
 			}
 				return;
@@ -237,7 +240,7 @@ public class Model {
 		matchesDay1.add(m7);
 	}
 	
-	public void generaCalendarioDay2() {
+	public void generaCalendarioDay2() {//qui devo cambiare ordine dei matches: ora sono = a quelli del day1
 		this.matchesDay2 = new ArrayList<>();
 		Player Player0EUR = this.teamEUR.get(0);
 		Player Player1EUR = this.teamEUR.get(1);
@@ -338,11 +341,59 @@ public class Model {
 		
 	}
 	
+	public String satsPlayer(String player) {
+		Player p = this.idMapPlayers.get(player);
+		String risultati = player + "'s results:\n";
+		List<MatchSingolo>singoli = new ArrayList<>(risultatiDay3);
+		List<MatchDoppio>doppi1 = new ArrayList<>(risultatiDay1);
+		List<MatchDoppio>doppi2 = new ArrayList<>(risultatiDay2);
+		List<MatchDoppio>doppi = new ArrayList<>();
+		doppi.addAll(doppi1);
+		doppi.addAll(doppi2);
+		
+		for(MatchSingolo x : singoli) {
+			if(x.toString().contains(player) /*x.getPlayerEUR().equals(p) || x.getPlayerUSA().equals(p)*/) {
+				String risMatch = "";
+	    		if(x.getPunteggio()<0) {
+	    			Integer delta = -x.getPunteggio();
+	    			risMatch += delta+" UP (EU)";
+	    		}
+	    		if(x.getPunteggio()==0) {
+	    			risMatch += " EVEN";
+	    		}
+	    		if(x.getPunteggio()>0) {
+	    			risMatch += x.getPunteggio()+" DOWN (EU)";
+	    		}
+				risultati += x.toStringSenzaACapo()+" "+risMatch+"\n";
+			}
+		}
+		for(MatchDoppio x : doppi) {
+			if(x.toString().contains(player) /*x.getPlayer1EUR().equals(p) || x.getPlayer1USA().equals(p) || x.getPlayer2EUR().equals(p) || x.getPlayer2USA().equals(p)*/) {
+				String risMatch = "";
+	    		if(x.getRisultatoMatch()<0) {
+	    			Integer delta = -x.getRisultatoMatch();
+	    			risMatch += delta+" UP (EU)";
+	    		}
+	    		if(x.getRisultatoMatch()==0) {
+	    			risMatch += "EVEN";
+	    		}
+	    		if(x.getRisultatoMatch()>0) {
+	    			risMatch += x.getRisultatoMatch()+" DOWN (EU)";
+	    		}
+	    		risultati +=  x.toStringSenzaACapo()+" "+risMatch+"\n";
+			}
+		}
+		return risultati;
+	}
+	
 	public SimResult simula(List<MatchDoppio>matchesDay1, List<MatchDoppio>matchesDay2, List<MatchSingolo>matchesDay3) {
 		Simulator sim = new Simulator(matchesDay1, matchesDay2, matchesDay3);
 		sim.initialize();
 		sim.run();
 		SimResult res = sim.getRisultato();
+		this.risultatiDay1 = new ArrayList<>(res.getRisultatiDay1());
+		this.risultatiDay2 = new ArrayList<>(res.getRisultatiDay2());
+		this.risultatiDay3 = new ArrayList<>(res.getRisultatiDay3());
 		return res;
 	}
 
@@ -354,7 +405,7 @@ public class Model {
 		return players;
 	}
 
-	public Map<Integer, Player> getIdMapPlayers() {
+	public Map<String, Player> getIdMapPlayers() {
 		return idMapPlayers;
 	}
 

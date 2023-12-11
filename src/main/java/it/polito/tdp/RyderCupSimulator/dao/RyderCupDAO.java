@@ -11,7 +11,7 @@ import it.polito.tdp.RyderCupSimulator.model.Player;
 
 public class RyderCupDAO {
 
-	/*public List<Player> getAllPlayers(){
+	public List<Player> getAllPlayers(){
 		String query = "SELECT DISTINCT * "
 				+ "FROM owgr r "
 		        + "ORDER BY r.RANKING ";
@@ -39,7 +39,7 @@ public class RyderCupDAO {
 			System.out.println("Errore connessione al database");
 			throw new RuntimeException("Error Connection Database");
 		}
-	}*/
+	}
 	
 	public List<Player> getAllPlayersEUR(Integer n){
 		String query = "SELECT * "

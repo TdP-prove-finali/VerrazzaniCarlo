@@ -110,5 +110,9 @@ public class MatchDoppio {
 		return "("+this.player1EUR.getNome()+this.player1EUR.getCognome()+"-"+this.player2EUR.getNome()+this.player2EUR.getCognome()+") vs "+"("+this.player1USA.getNome()+this.player1USA.getCognome()+"-"+this.player2USA.getNome()+this.player2USA.getCognome()+")\n";
 	}
 	
+	public String toStringSenzaACapo() {
+		return "("+this.player1EUR.getNome()+this.player1EUR.getCognome()+"-"+this.player2EUR.getNome()+this.player2EUR.getCognome()+") vs "+"("+this.player1USA.getNome()+this.player1USA.getCognome()+"-"+this.player2USA.getNome()+this.player2USA.getCognome()+")";
+	}
+	
 
 }

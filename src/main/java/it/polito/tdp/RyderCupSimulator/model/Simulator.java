@@ -51,8 +51,8 @@ public class Simulator {
 				this.risultatiDay3 = new ArrayList<>();
 				//eventi matchDay1
 				for (MatchDoppio x : this.calendarioDay1) {
-					Double scoreEUR = (x.getPlayer1EUR().getMediaScore()+x.getPlayer2EUR().getMediaScore())/2+Math.random()*4-Math.random()*4;
-					Double scoreUSA = (x.getPlayer1USA().getMediaScore()+x.getPlayer2USA().getMediaScore())/2+Math.random()*4-Math.random()*4;
+					Double scoreEUR = (x.getPlayer1EUR().getMediaScore()+x.getPlayer2EUR().getMediaScore())/2+Math.random()*5-Math.random()*8;
+					Double scoreUSA = (x.getPlayer1USA().getMediaScore()+x.getPlayer2USA().getMediaScore())/2+Math.random()*5-Math.random()*8;
 					Integer punteggioMatch = (int) (scoreEUR-scoreUSA);
 					MatchDoppio m = new MatchDoppio(x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch);
 					this.queue.add(new Evento(EventType.MATCHDOPPIO, 1, x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch));
@@ -61,8 +61,8 @@ public class Simulator {
 				
 				//eventi match Day2
 				for (MatchDoppio x : this.calendarioDay2) {
-					Double scoreEUR = (x.getPlayer1EUR().getMediaScore()+x.getPlayer2EUR().getMediaScore())/2+Math.random()*4-Math.random()*4;
-					Double scoreUSA = (x.getPlayer1USA().getMediaScore()+x.getPlayer2USA().getMediaScore())/2+Math.random()*4-Math.random()*4;
+					Double scoreEUR = (x.getPlayer1EUR().getMediaScore()+x.getPlayer2EUR().getMediaScore())/2+Math.random()*8-Math.random()*8;
+					Double scoreUSA = (x.getPlayer1USA().getMediaScore()+x.getPlayer2USA().getMediaScore())/2+Math.random()*8-Math.random()*8;
 					Integer punteggioMatch = (int) (scoreEUR-scoreUSA);
 					MatchDoppio m = new MatchDoppio(x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch);
 					this.queue.add(new Evento(EventType.MATCHDOPPIO, 2, x.getPlayer1EUR(), x.getPlayer2EUR(), x.getPlayer1USA(), x.getPlayer2USA(), scoreEUR, scoreUSA, punteggioMatch));
@@ -70,8 +70,8 @@ public class Simulator {
 				}
 				//eventi match Day3
 				for (MatchSingolo x : this.calendarioDay3) {
-					Double scoreEUR = (x.getPlayerEUR().getMediaScore()+Math.random()*4-Math.random()*4);
-					Double scoreUSA = (x.getPlayerUSA().getMediaScore()+Math.random()*4-Math.random()*4);
+					Double scoreEUR = (x.getPlayerEUR().getMediaScore()+Math.random()*5-Math.random()*8);
+					Double scoreUSA = (x.getPlayerUSA().getMediaScore()+Math.random()*5-Math.random()*8);
 					Integer punteggioMatch = (int) (scoreEUR-scoreUSA);
 					MatchSingolo m = new MatchSingolo(x.getPlayerEUR(), x.getPlayerUSA(), scoreEUR, scoreUSA, punteggioMatch);
 					this.queue.add(new Evento(EventType.MATCHSINGOLO, 3, x.getPlayerEUR(), x.getPlayerUSA(), null, null, scoreEUR, scoreUSA, punteggioMatch));
