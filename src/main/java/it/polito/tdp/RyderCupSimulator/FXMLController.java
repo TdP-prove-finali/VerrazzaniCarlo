@@ -50,6 +50,12 @@ public class FXMLController {
 
     @FXML
     private TextArea txtUSA;
+    
+    @FXML
+    private TextField puntiEUR;
+
+    @FXML
+    private TextField puntiUSA;
 
     @FXML
     void doGenerateMatchTable(ActionEvent event) {
@@ -133,7 +139,7 @@ public class FXMLController {
     @FXML
     void doSimulateMatches(ActionEvent event) {
     SimResult res = model.simula(model.getMatchesDay1(), model.getMatchesDay2(), model.getMatchesDay3());
-    	String s = "\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
+    	String s ="Simulazione di Ryder cup effettuata con successo!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
     	for(MatchDoppio m: res.getRisultatiDay1()) {
     		String risMatch = "";
     		if(m.getRisultatoMatch()<0) {
@@ -179,6 +185,8 @@ public class FXMLController {
     		s+= "(Day:3) " + "["+m.getPlayerEUR().getNome()+m.getPlayerEUR().getCognome()+"] vs"+" ["+m.getPlayerUSA().getNome()+ m.getPlayerUSA().getCognome()+"] result: "+risMatch+"\n";
     	}
     	this.txtCalendar.appendText(s);
+    	this.puntiEUR.setText(""+res.getPunteggioEUR());
+    	this.puntiUSA.setText(""+res.getPunteggioUSA());
     	this.boxPlayer.setDisable(false);
     	this.btnCalcolaStats.setDisable(false);
     }
@@ -196,14 +204,16 @@ public class FXMLController {
 
     @FXML
     void initialize() {
-    	 assert boxPlayer != null : "fx:id=\"boxPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
-         assert btnCalcolaStats != null : "fx:id=\"btnCalcolaStats\" was not injected: check your FXML file 'Scene.fxml'.";
-         assert btnSimulateMatches != null : "fx:id=\"btnSimulateMatches\" was not injected: check your FXML file 'Scene.fxml'.";
-         assert nAppearances != null : "fx:id=\"nAppearances\" was not injected: check your FXML file 'Scene.fxml'.";
-         assert txtCalendar != null : "fx:id=\"txtCalendar\" was not injected: check your FXML file 'Scene.fxml'.";
-         assert txtEUR != null : "fx:id=\"txtEUR\" was not injected: check your FXML file 'Scene.fxml'.";
-         assert txtStatsPlayer != null : "fx:id=\"txtStatsPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
-         assert txtUSA != null : "fx:id=\"txtUSA\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert boxPlayer != null : "fx:id=\"boxPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnCalcolaStats != null : "fx:id=\"btnCalcolaStats\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert btnSimulateMatches != null : "fx:id=\"btnSimulateMatches\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert nAppearances != null : "fx:id=\"nAppearances\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert puntiEUR != null : "fx:id=\"puntiEUR\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert puntiUSA != null : "fx:id=\"puntiUSA\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtCalendar != null : "fx:id=\"txtCalendar\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtEUR != null : "fx:id=\"txtEUR\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtStatsPlayer != null : "fx:id=\"txtStatsPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
+        assert txtUSA != null : "fx:id=\"txtUSA\" was not injected: check your FXML file 'Scene.fxml'.";
 
     }
 

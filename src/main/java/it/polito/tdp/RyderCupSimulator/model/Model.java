@@ -194,7 +194,7 @@ public class Model {
 		return result;
 	}
 	
-	public void generaCalendarioDay1() {
+	public void generaCalendarioDay1() {//metto: 1+12, 2+11, ... e infine i migliori 2 per squadra giocano 2 matches nel day1
 		this.matchesDay1 = new ArrayList<>();
 		Player Player0EUR = this.teamEUR.get(0);
 		Player Player1EUR = this.teamEUR.get(1);
@@ -240,9 +240,10 @@ public class Model {
 		matchesDay1.add(m7);
 	}
 	
-	public void generaCalendarioDay2() {//qui devo cambiare ordine dei matches: ora sono = a quelli del day1
+	public void generaCalendarioDay2() {//qui devo cambiare ordine dei matches: quelli commentati sono = a quelli del day1
+		//quelli sotto sono accoppiamenti randomici
 		this.matchesDay2 = new ArrayList<>();
-		Player Player0EUR = this.teamEUR.get(0);
+		/*Player Player0EUR = this.teamEUR.get(0);
 		Player Player1EUR = this.teamEUR.get(1);
 		Player Player2EUR = this.teamEUR.get(2);
 		Player Player3EUR = this.teamEUR.get(3);
@@ -268,6 +269,8 @@ public class Model {
 		Player Player10USA = this.teamUSA.get(10);
 		Player Player11USA = this.teamUSA.get(11);
 		
+		
+		
 		MatchDoppio m0 = new MatchDoppio(Player0EUR, Player11EUR, Player0USA, Player11USA, 0.0, 0.0, 0);
 		MatchDoppio m1 = new MatchDoppio(Player1EUR, Player10EUR, Player1USA, Player10USA, 0.0, 0.0, 0);
 		MatchDoppio m2 = new MatchDoppio(Player2EUR, Player9EUR, Player2USA, Player9USA, 0.0, 0.0, 0);
@@ -283,7 +286,50 @@ public class Model {
 		matchesDay2.add(m4);
 		matchesDay2.add(m5);
 		matchesDay2.add(m6);
-		matchesDay2.add(m7);
+		matchesDay2.add(m7);*/
+		
+		List<Player>squadraEUR = new ArrayList<>(this.teamEUR);
+		List<Player>squadraUSA = new ArrayList<>(this.teamUSA);
+		List<Player>squadraEUR2 = new ArrayList<>(this.teamEUR);
+		List<Player>squadraUSA2 = new ArrayList<>(this.teamUSA);
+		while(!squadraEUR.isEmpty()) {//genero la prima serie di accoppiamenti(matches: 1-->6)
+			
+			Integer n0 = (int) (Math.random()*squadraEUR.size());
+			Player p0EU = squadraEUR.get(n0);
+			squadraEUR.remove(p0EU);
+			Integer n1 = (int) (Math.random()*squadraEUR.size());
+			Player p1EU = squadraEUR.get(n1);
+			squadraEUR.remove(p1EU);
+			
+			Integer nu0 = (int) (Math.random()*squadraUSA.size());
+			Player p0US = squadraUSA.get(nu0);
+			squadraUSA.remove(p0US);
+			Integer nu1 = (int) (Math.random()*squadraUSA.size());
+			Player p1US = squadraUSA.get(nu1);
+			squadraUSA.remove(p1US);
+			MatchDoppio m = new MatchDoppio(p0EU, p1EU, p0US, p1US, 0.0, 0.0, 0);
+			matchesDay2.add(m);
+		}
+		for(int i = 1; i<=2; i++){//genero gli ultimi due matches anche qui generando coppie casuali
+			Integer n0 = (int) (Math.random()*squadraEUR2.size());
+			Player p0EU = squadraEUR2.get(n0);
+			squadraEUR2.remove(p0EU);
+			Integer n1 = (int) (Math.random()*squadraEUR2.size());
+			Player p1EU = squadraEUR2.get(n1);
+			squadraEUR2.remove(p1EU);
+			
+			Integer nu0 = (int) (Math.random()*squadraUSA2.size());
+			Player p0US = squadraUSA2.get(nu0);
+			squadraUSA2.remove(p0US);
+			Integer nu1 = (int) (Math.random()*squadraUSA2.size());
+			Player p1US = squadraUSA2.get(nu1);
+			squadraUSA2.remove(p1US);
+			MatchDoppio m = new MatchDoppio(p0EU, p1EU, p0US, p1US, 0.0, 0.0, 0);
+			matchesDay2.add(m);
+		}
+		
+		
+			
 	}
 	public void generaCalendarioDay3() {
 		this.matchesDay3 = new ArrayList<>();
