@@ -106,13 +106,17 @@ public class FXMLController {
     	try {
     		nApparizioni = Integer.parseInt(input);
     	}catch(NumberFormatException e) {
-    		this.txtEUR.setText("Inserire un numero nel campo numeroApparizioni");
+    		this.txtEUR.setText("Insert a number in field appearances");
     		return;
     	}
     	
     	List<Player>giocatori = new ArrayList<>(model.calcolaTeamEUR(nApparizioni));
     	for(Player x : giocatori) {
     		s += x.toString();
+    	}
+    	if(model.getTeamEUR().size()<12) {
+    		this.txtEUR.setText("Not enough players!");
+    		return;
     	}
     	this.txtEUR.appendText(s);
     }
@@ -125,7 +129,7 @@ public class FXMLController {
     	try {
     		nApparizioni = Integer.parseInt(input);
     	}catch(NumberFormatException e) {
-    		this.txtUSA.setText("Inserire un numero nel campo numeroApparizioni");
+    		this.txtUSA.setText("Insert a number in field appearances");
     		return;
     	}
     	
@@ -133,13 +137,17 @@ public class FXMLController {
     	for(Player x : giocatori) {
     		s += x.toString();
     	}
+    	if(model.getTeamUSA().size()<12) {
+    		this.txtUSA.setText("Not enough players!");
+    		return;
+    	}
     	this.txtUSA.appendText(s);
     }
 
     @FXML
     void doSimulateMatches(ActionEvent event) {
     SimResult res = model.simula(model.getMatchesDay1(), model.getMatchesDay2(), model.getMatchesDay3());
-    	String s ="Simulazione di Ryder cup effettuata con successo!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
+    	String s ="Ryder Cup simulation succeded!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
     	for(MatchDoppio m: res.getRisultatiDay1()) {
     		String risMatch = "";
     		if(m.getRisultatoMatch()<0) {
