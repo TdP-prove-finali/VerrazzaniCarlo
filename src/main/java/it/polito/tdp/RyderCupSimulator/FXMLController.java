@@ -149,7 +149,7 @@ public class FXMLController {
     @FXML
     void doSimulateMatches(ActionEvent event) {
     SimResult res = model.simula(model.getMatchesDay1(), model.getMatchesDay2(), model.getMatchesDay3());
-    	String s ="Ryder Cup simulation succeded!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
+    	String s ="\nRyder Cup simulation succeded!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
     	for(MatchDoppio m: res.getRisultatiDay1()) {
     		String risMatch = "";
     		if(m.getRisultatoMatch()<0) {
