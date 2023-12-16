@@ -109,15 +109,16 @@ public class FXMLController {
     		this.txtEUR.setText("Insert a number in field appearances");
     		return;
     	}
+    	if(model.loadPlayersEUR(nApparizioni).size()<12) {
+    		this.txtEUR.setText("Not enough players!");
+    		return;
+    	}
     	
     	List<Player>giocatori = new ArrayList<>(model.calcolaTeamEUR(nApparizioni));
     	for(Player x : giocatori) {
     		s += x.toString();
     	}
-    	if(model.getTeamEUR().size()<12) {
-    		this.txtEUR.setText("Not enough players!");
-    		return;
-    	}
+    	
     	this.txtEUR.appendText(s);
     }
 
@@ -132,15 +133,16 @@ public class FXMLController {
     		this.txtUSA.setText("Insert a number in field appearances");
     		return;
     	}
-    	
-    	List<Player>giocatori = new ArrayList<>(model.calcolaTeamUSA(nApparizioni));
-    	for(Player x : giocatori) {
-    		s += x.toString();
-    	}
-    	if(model.getTeamUSA().size()<12) {
+    	if(model.loadPlayersUSA(nApparizioni).size()<12) {
     		this.txtUSA.setText("Not enough players!");
     		return;
     	}
+    	List<Player>giocatori = new ArrayList<>(model.calcolaTeamUSA(nApparizioni));
+    	
+    	for(Player x : giocatori) {
+    		s += x.toString();
+    	}
+    	
     	this.txtUSA.appendText(s);
     }
 

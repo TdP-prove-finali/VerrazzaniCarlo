@@ -31,6 +31,7 @@ public class Model {
 		this.teamUSA = new ArrayList<>();
 		this.players = new ArrayList<>(dao.getAllPlayers());
 		this.idMapPlayers = new HashMap<>();
+		
 		for(Player p : this.players) {
 			String fullName = p.getNome()+p.getCognome();
 			this.idMapPlayers.put(fullName, p);
