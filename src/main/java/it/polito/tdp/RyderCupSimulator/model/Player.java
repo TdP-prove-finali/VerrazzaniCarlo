@@ -1,6 +1,6 @@
 package it.polito.tdp.RyderCupSimulator.model;
 
-public class Player {
+public class Player implements Comparable<Player>{
 	private String nome;
 	private String cognome;
 	private String nazione;
@@ -80,6 +80,12 @@ public class Player {
 	@Override
 	public String toString() {
 		return nome + " " + cognome + " " + posizioneRanking + " (tot.Incassi= " +totaleIncassiAnno+") " + " (numApparizioni= " + this.appearances+ ") " +" [mediaScore= "+ this.mediaScore+ "]\n";
+	}
+
+	@Override
+	public int compareTo(Player o) {
+		// TODO Auto-generated method stub
+		return (int) (this.mediaScore-o.mediaScore);
 	}
 	
 	
