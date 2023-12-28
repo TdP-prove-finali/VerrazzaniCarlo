@@ -113,7 +113,7 @@ public class Model {
 		return this.teamUSA;
 	}
 		
-	private void ricorsioneUSASalario(List<Player> parziale, List<Player> rimanenti, Integer nMinA){//errore sulla media...
+	private void ricorsioneUSASalario(List<Player> parziale, List<Player> rimanenti, Integer nMinA){
 		// Condizione Terminale
 		if (parziale.size() == 9) {
 			//calcolo totIncassi
@@ -131,6 +131,21 @@ public class Model {
  				ricorsioneUSASalario(parziale, currentRimanenti, nMinA);
  				parziale.remove(parziale.size()-1);
  		}
+	}
+	
+	private List<Player> calcolaTrePlayerPerMediaUSA(List<Player>parziale, List<Player> rimanenti, Integer nMinA){
+		List<Player>ultimiPlayers = new ArrayList<>();
+		rimanenti.removeAll(teamUSA);
+		List<Player>rimanentiOrdinati = new ArrayList<>(rimanenti);
+		Collections.sort(rimanentiOrdinati);
+		Integer i = 0;
+		while(ultimiPlayers.size()<3){
+			if(!teamUSA.contains(rimanentiOrdinati.get(i))) {
+				ultimiPlayers.add(rimanentiOrdinati.get(i));
+				i++;
+			}
+		}
+		return ultimiPlayers;
 	}
 	
 	private void ricorsioneEURSalario(List<Player> parziale, List<Player> rimanenti, Integer nMinA){
@@ -168,20 +183,7 @@ public class Model {
 		return ultimiPlayers;
 	}
 	
-	private List<Player> calcolaTrePlayerPerMediaUSA(List<Player>parziale, List<Player> rimanenti, Integer nMinA){
-		List<Player>ultimiPlayers = new ArrayList<>();
-		rimanenti.removeAll(teamUSA);
-		List<Player>rimanentiOrdinati = new ArrayList<>(rimanenti);
-		Collections.sort(rimanentiOrdinati);
-		Integer i = 0;
-		while(ultimiPlayers.size()<3){
-			if(!teamUSA.contains(rimanentiOrdinati.get(i))) {
-				ultimiPlayers.add(rimanentiOrdinati.get(i));
-				i++;
-			}
-		}
-		return ultimiPlayers;
-	}
+	
 	
 	private double getSalarioTeam(List<Player> team) {
 		double result = 0.0;
@@ -288,16 +290,14 @@ public class Model {
 			squadraUSA2.remove(p1US);
 			MatchDoppio m = new MatchDoppio(p0EU, p1EU, p0US, p1US, 0.0, 0.0, 0);
 			matchesDay2.add(m);
-		}
-		
-		
-			
+		}			
 	}
+	
 	public void generaCalendarioDay3() {
 		this.matchesDay3 = new ArrayList<>();
 		List<Player>squadraEUR = new ArrayList<>(this.teamEUR);
 		List<Player>squadraUSA = new ArrayList<>(this.teamUSA);
-		while(!squadraEUR.isEmpty()) {//genero la prima serie di accoppiamenti(matches: 1-->6)
+		while(!squadraEUR.isEmpty()) {
 			
 			Integer n0 = (int) (Math.random()*squadraEUR.size());
 			Player p0EU = squadraEUR.get(n0);
@@ -340,7 +340,7 @@ public class Model {
 			}
 		}
 		for(MatchDoppio x : doppi) {
-			if(x.toString().contains(player) /*x.getPlayer1EUR().equals(p) || x.getPlayer1USA().equals(p) || x.getPlayer2EUR().equals(p) || x.getPlayer2USA().equals(p)*/) {
+			if(x.toString().contains(player)) {
 				String risMatch = "";
 	    		if(x.getRisultatoMatch()<0) {
 	    			Integer delta = -x.getRisultatoMatch();
