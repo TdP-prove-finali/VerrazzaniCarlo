@@ -97,6 +97,7 @@ public class FXMLController {
     	}
     this.btnSimulateMatches.setDisable(false);
     }
+    
 
     @FXML
     void doSelectTeamEurope(ActionEvent event) {
