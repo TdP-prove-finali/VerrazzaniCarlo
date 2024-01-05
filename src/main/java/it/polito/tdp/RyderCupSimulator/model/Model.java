@@ -356,6 +356,7 @@ public class Model {
 	    		risultati +=  x.toStringSenzaACapo()+" "+risMatch+"\n";
 			}
 		}
+		
 		return risultati;
 	}
 	
