@@ -205,6 +205,7 @@ public class Model {
 	
 	public void generaCalendarioDay1() {//metto: 1+12, 2+11, ... e infine i migliori 2 per squadra giocano 2 matches nel day1
 		this.matchesDay1 = new ArrayList<>();
+		
 		Player Player0EUR = this.teamEUR.get(0);
 		Player Player1EUR = this.teamEUR.get(1);
 		Player Player2EUR = this.teamEUR.get(2);
@@ -399,6 +400,18 @@ public class Model {
 
 	public List<MatchSingolo> getMatchesDay3() {
 		return matchesDay3;
+	}
+
+	public List<MatchDoppio> getRisultatiDay1() {
+		return risultatiDay1;
+	}
+
+	public List<MatchDoppio> getRisultatiDay2() {
+		return risultatiDay2;
+	}
+
+	public List<MatchSingolo> getRisultatiDay3() {
+		return risultatiDay3;
 	}
 	
 	

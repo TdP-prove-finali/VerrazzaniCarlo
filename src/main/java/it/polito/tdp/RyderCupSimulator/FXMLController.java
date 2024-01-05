@@ -34,7 +34,13 @@ public class FXMLController {
     private Button btnCalcolaStats;
 
     @FXML
-    private Button btnSimulateMatches;
+    private Button btnSimulateMatchesDay1;
+
+    @FXML
+    private Button btnSimulateMatchesDay2;
+
+    @FXML
+    private Button btnSimulateMatchesDay3;
 
     @FXML
     private TextField nAppearances;
@@ -81,7 +87,6 @@ public class FXMLController {
     	for(MatchDoppio x : calDay2) {
     		s += x.toString();
     	}
-    	
     	s += "\nDay3:\n";
     	for(MatchSingolo x : calDay3) {
     		s += x.toString();
@@ -95,7 +100,7 @@ public class FXMLController {
     		String nomeCogn = x.getNome()+x.getCognome();
     		this.boxPlayer.getItems().add(nomeCogn);
     	}
-    this.btnSimulateMatches.setDisable(false);
+    this.btnSimulateMatchesDay1.setDisable(false);
     }
     
 
@@ -148,61 +153,95 @@ public class FXMLController {
     }
 
     @FXML
-    void doSimulateMatches(ActionEvent event) {
+    void doSimulateMatches1(ActionEvent event) {
     SimResult res = model.simula(model.getMatchesDay1(), model.getMatchesDay2(), model.getMatchesDay3());
-    	String s ="\nRyder Cup simulation succeded!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
+    Double parzialeUSA1 = 0.0;
+    Double parzialeEUR1 = 0.0;
+    	String s ="\nRyder Cup simulation for round 1 succeded!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
     	for(MatchDoppio m: res.getRisultatiDay1()) {
     		String risMatch = "";
     		if(m.getRisultatoMatch()<0) {
     			Integer delta = -m.getRisultatoMatch();
     			risMatch += delta+" UP (EU)";
+    			parzialeEUR1 += 1;
     		}
     		if(m.getRisultatoMatch()==0) {
     			risMatch += "EVEN";
+    			parzialeEUR1+=0.5;
+    			parzialeUSA1+=0.5;
     		}
     		if(m.getRisultatoMatch()>0) {
     			risMatch += m.getRisultatoMatch()+" DOWN (EU)";
+    			parzialeUSA1+=1;
     		}
     		s+= "(Day:1) " + "["+m.getPlayer1EUR().getNome()+m.getPlayer1EUR().getCognome()+"+"+ m.getPlayer2EUR().getNome()+m.getPlayer2EUR().getCognome()+"] vs"+" ["+m.getPlayer1USA().getNome()+ m.getPlayer1USA().getCognome()+"+"+ m.getPlayer2USA().getNome()+m.getPlayer2USA().getCognome()+"] result: "+risMatch+"\n";
-
     	}
-    	for(MatchDoppio m: res.getRisultatiDay2()) {
+    	
+    	this.btnSimulateMatchesDay2.setDisable(false);
+    	this.txtCalendar.appendText(s);
+    	this.puntiEUR.setText(""+parzialeEUR1);
+    	this.puntiUSA.setText(""+parzialeUSA1);
+    	
+    }
+    
+    @FXML
+    void doSimulateMatches2(ActionEvent event) {
+    	Double parzialeUSA1 = Double.parseDouble(this.puntiUSA.getText());
+    	Double parzialeEUR1 = Double.parseDouble(this.puntiEUR.getText());
+    	String s ="\nRyder Cup simulation for round 2 succeded!\n"; //"\nRisultato Ryder Cup: [EUROPE: "+res.getPunteggioEUR()+"], [USA: "+res.getPunteggioUSA()+"]\n";
+    	for(MatchDoppio m: model.getRisultatiDay2()) {
     		String risMatch = "";
     		if(m.getRisultatoMatch()<0) {
     			Integer delta = -m.getRisultatoMatch();
     			risMatch += delta+" UP (EU)";
+    			parzialeEUR1+=1;
     		}
     		if(m.getRisultatoMatch()==0) {
     			risMatch += "EVEN";
+    			parzialeEUR1+=0.5;
+    			parzialeUSA1+=0.5;
     		}
     		if(m.getRisultatoMatch()>0) {
     			risMatch += m.getRisultatoMatch()+" DOWN (EU)";
+    			parzialeUSA1+=1;
     		}
     		s+= "(Day:2) " + "["+m.getPlayer1EUR().getNome()+m.getPlayer1EUR().getCognome()+"+"+ m.getPlayer2EUR().getNome()+m.getPlayer2EUR().getCognome()+"] vs"+" ["+m.getPlayer1USA().getNome()+ m.getPlayer1USA().getCognome()+"+"+ m.getPlayer2USA().getNome()+m.getPlayer2USA().getCognome()+"] result: "+risMatch+"\n";
-
     	}
-    	for(MatchSingolo m: res.getRisultatiDay3()) {
+    	this.btnSimulateMatchesDay3.setDisable(false);
+		this.txtCalendar.appendText(s);
+    	this.puntiEUR.setText(""+parzialeEUR1);
+    	this.puntiUSA.setText(""+parzialeUSA1);
+	}
+
+    @FXML
+    void doSimulateMatches3(ActionEvent event) {
+    	Double parzialeUSA2 = Double.parseDouble(this.puntiUSA.getText());
+    	Double parzialeEUR2 = Double.parseDouble(this.puntiEUR.getText());
+    	String s ="\nRyder Cup simulation for round 3 succeded!\n"; ;
+    	for(MatchSingolo m: model.getRisultatiDay3()) {
     		String risMatch = "";
     		if(m.getPunteggio()<0) {
     			Integer delta = -m.getPunteggio();
     			risMatch += delta+" UP (EU)";
+    			parzialeEUR2+=1;
     		}
     		if(m.getPunteggio()==0) {
     			risMatch += "EVEN";
+    			parzialeEUR2 += 0.5;
+    			parzialeUSA2 += 0.5;
     		}
     		if(m.getPunteggio()>0) {
     			risMatch += m.getPunteggio()+" DOWN (EU)";
+    			parzialeUSA2+=1;
     		}
     		s+= "(Day:3) " + "["+m.getPlayerEUR().getNome()+m.getPlayerEUR().getCognome()+"] vs"+" ["+m.getPlayerUSA().getNome()+ m.getPlayerUSA().getCognome()+"] result: "+risMatch+"\n";
     	}
     	this.txtCalendar.appendText(s);
-    	this.puntiEUR.setText(""+res.getPunteggioEUR());
-    	this.puntiUSA.setText(""+res.getPunteggioUSA());
-    	this.boxPlayer.setDisable(false);
+    	this.puntiEUR.setText(""+parzialeEUR2);
+    	this.puntiUSA.setText(""+parzialeUSA2);
+		this.boxPlayer.setDisable(false);
     	this.btnCalcolaStats.setDisable(false);
     }
-    
-    
 
     @FXML
     void doCalcolaStats(ActionEvent event) {
@@ -215,17 +254,18 @@ public class FXMLController {
 
     @FXML
     void initialize() {
-        assert boxPlayer != null : "fx:id=\"boxPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert btnCalcolaStats != null : "fx:id=\"btnCalcolaStats\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert btnSimulateMatches != null : "fx:id=\"btnSimulateMatches\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert nAppearances != null : "fx:id=\"nAppearances\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert puntiEUR != null : "fx:id=\"puntiEUR\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert puntiUSA != null : "fx:id=\"puntiUSA\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert txtCalendar != null : "fx:id=\"txtCalendar\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert txtEUR != null : "fx:id=\"txtEUR\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert txtStatsPlayer != null : "fx:id=\"txtStatsPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
-        assert txtUSA != null : "fx:id=\"txtUSA\" was not injected: check your FXML file 'Scene.fxml'.";
-
+    	  assert boxPlayer != null : "fx:id=\"boxPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert btnCalcolaStats != null : "fx:id=\"btnCalcolaStats\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert btnSimulateMatchesDay1 != null : "fx:id=\"btnSimulateMatchesDay1\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert btnSimulateMatchesDay2 != null : "fx:id=\"btnSimulateMatchesDay2\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert btnSimulateMatchesDay3 != null : "fx:id=\"btnSimulateMatchesDay3\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert nAppearances != null : "fx:id=\"nAppearances\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert puntiEUR != null : "fx:id=\"puntiEUR\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert puntiUSA != null : "fx:id=\"puntiUSA\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert txtCalendar != null : "fx:id=\"txtCalendar\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert txtEUR != null : "fx:id=\"txtEUR\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert txtStatsPlayer != null : "fx:id=\"txtStatsPlayer\" was not injected: check your FXML file 'Scene.fxml'.";
+          assert txtUSA != null : "fx:id=\"txtUSA\" was not injected: check your FXML file 'Scene.fxml'.";
     }
 
 	public void setModel(Model model) {
@@ -235,3 +275,4 @@ public class FXMLController {
 	
 
 }
+
