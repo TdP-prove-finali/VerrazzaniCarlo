@@ -193,16 +193,6 @@ public class Model {
 		return result;
 	}
 	
-	/*private double calcolaMediaTeam(List<Player> team) {
-		double sum = 0.0;
-		double result = 0.0;
-		for (Player p : team) {
-			sum += p.getMediaScore();
-		}
-		result = sum/team.size();
-		return result;
-	}*/
-	
 	public void generaCalendarioDay1() {//metto: 1+12, 2+11, ... e infine i migliori 2 per squadra giocano 2 matches nel day1
 		this.matchesDay1 = new ArrayList<>();
 		
@@ -250,48 +240,110 @@ public class Model {
 		matchesDay1.add(m7);
 	}
 	
-	public void generaCalendarioDay2() {//qui devo cambiare ordine dei matches: quelli commentati sono = a quelli del day1
-		//quelli sotto sono accoppiamenti randomici
+	public void generaCalendarioDay2() {//qui creo accoppiamenti in base ai risultati del day1: se una coppia ha vinto nei primi 6 matches del day 1 la ripropongo per il day 2, se ha perso: la cambio
 		this.matchesDay2 = new ArrayList<>();
-		List<Player>squadraEUR = new ArrayList<>(this.teamEUR);
-		List<Player>squadraUSA = new ArrayList<>(this.teamUSA);
-		List<Player>squadraEUR2 = new ArrayList<>(this.teamEUR);
-		List<Player>squadraUSA2 = new ArrayList<>(this.teamUSA);
-		while(!squadraEUR.isEmpty()) {//genero la prima serie di accoppiamenti(matches: 1-->6)
-			
-			Integer n0 = (int) (Math.random()*squadraEUR.size());
-			Player p0EU = squadraEUR.get(n0);
-			squadraEUR.remove(p0EU);
-			Integer n1 = (int) (Math.random()*squadraEUR.size());
-			Player p1EU = squadraEUR.get(n1);
-			squadraEUR.remove(p1EU);
-			
-			Integer nu0 = (int) (Math.random()*squadraUSA.size());
-			Player p0US = squadraUSA.get(nu0);
-			squadraUSA.remove(p0US);
-			Integer nu1 = (int) (Math.random()*squadraUSA.size());
-			Player p1US = squadraUSA.get(nu1);
-			squadraUSA.remove(p1US);
-			MatchDoppio m = new MatchDoppio(p0EU, p1EU, p0US, p1US, 0.0, 0.0, 0);
-			matchesDay2.add(m);
+		List<CoppiaPlayers>vincentiEUR = new ArrayList<>();
+		List<CoppiaPlayers>vincentiUSA = new ArrayList<>();
+		List<Player>disponibiliEUR = new ArrayList<>();
+		List<Player>disponibiliUSA = new ArrayList<>();
+		List<Player>disponibiliEUR2 = new ArrayList<>();
+		List<Player>disponibiliUSA2 = new ArrayList<>();
+
+		List<CoppiaPlayers>coppieEUR = new ArrayList<>();
+		List<CoppiaPlayers>coppieUSA = new ArrayList<>();
+		
+		for(Player p : this.teamEUR) {
+			disponibiliEUR.add(p);
+			disponibiliEUR2.add(p);
 		}
-		for(int i = 1; i<=2; i++){//genero gli ultimi due matches anche qui generando coppie casuali
-			Integer n0 = (int) (Math.random()*squadraEUR2.size());
-			Player p0EU = squadraEUR2.get(n0);
-			squadraEUR2.remove(p0EU);
-			Integer n1 = (int) (Math.random()*squadraEUR2.size());
-			Player p1EU = squadraEUR2.get(n1);
-			squadraEUR2.remove(p1EU);
+		for(Player p : this.teamUSA) {
+			disponibiliUSA.add(p);
+			disponibiliUSA2.add(p);
+		}
+		//conto solo i primi sei match del day 1
+		List<MatchDoppio>matchesSelezionati = new ArrayList<>();
+		for(int i = 0; i<6; i++) {
+			matchesSelezionati.add(this.risultatiDay1.get(i));
+		}
+		for(MatchDoppio x : matchesSelezionati) {
+			//mantengo traccia delle coppie vincenti
+			//le coppie che hanno vinto il 1 giorno le mantengo
+			if(x.getRisultatoMatch() < 0) {
+				Player p1 = x.getPlayer1EUR();
+				Player p2 = x.getPlayer2EUR();
+				CoppiaPlayers c = new CoppiaPlayers(p1, p2, "eur");
+				vincentiEUR.add(c);
+				coppieEUR.add(c);
+				disponibiliEUR.remove(p1);
+				disponibiliEUR.remove(p2);
+			}
+			if(x.getRisultatoMatch()>0) {
+				Player p1 = x.getPlayer1USA();
+				Player p2 = x.getPlayer2USA();
+				CoppiaPlayers c = new CoppiaPlayers(p1, p2, "usa");
+				vincentiUSA.add(c);
+				coppieUSA.add(c);
+				disponibiliUSA.remove(p1);
+				disponibiliUSA.remove(p2);
+			}
+		}
+			//per gli altri giocatori: cambio coppie in modo casuale
+			while(!disponibiliEUR.isEmpty()) {//cosi ho creato 6 coppie per l'Europa
+				Integer n0 = (int) (Math.random()*disponibiliEUR.size());
+				Player p0EU = disponibiliEUR.get(n0);
+				disponibiliEUR.remove(p0EU);
+				Integer n1 = (int) (Math.random()*disponibiliEUR.size());
+				Player p1EU = disponibiliEUR.get(n1);
+				disponibiliEUR.remove(p1EU);
+				CoppiaPlayers c = new CoppiaPlayers(p0EU, p1EU, "eur");
+				coppieEUR.add(c);
+			}
+			while(!disponibiliUSA.isEmpty()) {//cosi ho creato 6 coppie per l'America
+				Integer nu0 = (int) (Math.random()*disponibiliUSA.size());
+				Player p0US = disponibiliUSA.get(nu0);
+				disponibiliUSA.remove(p0US);
+				Integer nu1 = (int) (Math.random()*disponibiliUSA.size());
+				Player p1US = disponibiliUSA.get(nu1);
+				disponibiliUSA.remove(p1US);
+				CoppiaPlayers c = new CoppiaPlayers(p0US, p1US, "usa");
+				coppieUSA.add(c);
+		    }
 			
-			Integer nu0 = (int) (Math.random()*squadraUSA2.size());
-			Player p0US = squadraUSA2.get(nu0);
-			squadraUSA2.remove(p0US);
-			Integer nu1 = (int) (Math.random()*squadraUSA2.size());
-			Player p1US = squadraUSA2.get(nu1);
-			squadraUSA2.remove(p1US);
-			MatchDoppio m = new MatchDoppio(p0EU, p1EU, p0US, p1US, 0.0, 0.0, 0);
-			matchesDay2.add(m);
-		}			
+			for(int i = 0; i<6; i++) {//creo i primi 6 matches
+				Player p1EUR = coppieEUR.get(i).getPlayer1();
+				Player p2EUR = coppieEUR.get(i).getPlayer2();
+				Player p1USA = coppieUSA.get(i).getPlayer1();
+				Player p2USA = coppieUSA.get(i).getPlayer2();
+				MatchDoppio m = new MatchDoppio(p1EUR, p2EUR, p1USA, p2USA, 0.0, 0.0, 0);
+				matchesDay2.add(m);
+				
+			}
+			//ora devo creare ancora 2 coppie per ciascuna squadra(infatti 4 giocatori per squadra giocano 2 matches in 1 giorno: scelgo i giocatori casualmente tenendo fuori quelli che hanno già giocato 2 partite al day1
+			disponibiliEUR2.remove(0);
+			disponibiliEUR2.remove(1);
+			disponibiliEUR2.remove(2);
+			disponibiliEUR2.remove(3);
+			disponibiliUSA2.remove(0);
+			disponibiliUSA2.remove(1);
+			disponibiliUSA2.remove(2);
+			disponibiliUSA2.remove(3);
+			for(int i = 0; i<2;  i++) {
+				Integer n0 = (int) (Math.random()*disponibiliEUR2.size());
+				Player p0EU = disponibiliEUR2.get(n0);
+				disponibiliEUR2.remove(p0EU);
+				Integer n1 = (int) (Math.random()*disponibiliEUR2.size());
+				Player p1EU = disponibiliEUR2.get(n1);
+				disponibiliEUR2.remove(p1EU);
+			
+				Integer nu0 = (int) (Math.random()*disponibiliUSA2.size());
+				Player p0US = disponibiliUSA2.get(nu0);
+				disponibiliUSA2.remove(p0US);
+				Integer nu1 = (int) (Math.random()*disponibiliUSA2.size());
+				Player p1US = disponibiliUSA2.get(nu1);
+				disponibiliUSA2.remove(p1US);
+				MatchDoppio m = new MatchDoppio(p0EU, p1EU, p0US, p1US, 0.0, 0.0, 0);
+				matchesDay2.add(m);
+			}
 	}
 	
 	public void generaCalendarioDay3() {
@@ -360,7 +412,7 @@ public class Model {
 		return risultati;
 	}
 	
-	public SimResult simula(List<MatchDoppio>matchesDay1, List<MatchDoppio>matchesDay2, List<MatchSingolo>matchesDay3) {
+	/*public SimResult simula(List<MatchDoppio>matchesDay1, List<MatchDoppio>matchesDay2, List<MatchSingolo>matchesDay3) {//----metodo originale
 		Simulator sim = new Simulator(matchesDay1, matchesDay2, matchesDay3);
 		sim.initialize();
 		sim.run();
@@ -369,8 +421,35 @@ public class Model {
 		this.risultatiDay2 = new ArrayList<>(res.getRisultatiDay2());
 		this.risultatiDay3 = new ArrayList<>(res.getRisultatiDay3());
 		return res;
+	}*/
+	
+	public SimResult simulaDay1(List<MatchDoppio>matchesDay1) {
+		SimulatorDay1 sim = new SimulatorDay1(matchesDay1);
+		sim.initialize();
+		sim.run();
+		SimResult res = sim.getRisultato();
+		this.risultatiDay1 = new ArrayList<>(res.getRisultatiDay1());
+		return res;
 	}
-
+	
+	public SimResult simulaDay2(List<MatchDoppio>matchesDay2) {
+		SimulatorDay2 sim = new SimulatorDay2(matchesDay2);
+		sim.initialize();
+		sim.run();
+		SimResult res = sim.getRisultato();
+		this.risultatiDay2 = new ArrayList<>(res.getRisultatiDay2());
+		return res;
+	}
+	
+	public SimResult simulaDay3(List<MatchSingolo>matchesDay3) {
+		SimulatorDay3 sim = new SimulatorDay3(matchesDay3);
+		sim.initialize();
+		sim.run();
+		SimResult res = sim.getRisultato();
+		this.risultatiDay3 = new ArrayList<>(res.getRisultatiDay3());
+		return res;
+	}
+	
 	public RyderCupDAO getDao() {
 		return dao;
 	}

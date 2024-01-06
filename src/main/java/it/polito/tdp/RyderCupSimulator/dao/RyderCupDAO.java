@@ -62,7 +62,7 @@ public class RyderCupDAO {
 				String nazione = rs.getString("CTRY");
 				Integer nApparizioni = rs.getInt("EVENTS_PLAYED_ACTUAL");
 				Integer posizioneRanking = rs.getInt("RANKING");
-				Integer totaleIncassiAnno = this.getTotaleIncassiEUR(nome, cognome);//per calcolo incassi posso usare come chiave primaria nomecognomenazionalita
+				Integer totaleIncassiAnno = this.getTotaleIncassiEUR(nome, cognome);
 				Double mediaScore = this.getMediaScoreEUR(nome, cognome);
 				Player p = new Player(nome, cognome, nazione, nApparizioni, posizioneRanking, totaleIncassiAnno, mediaScore);
 				result.add(p);
@@ -95,7 +95,7 @@ public class RyderCupDAO {
 				String nazione = rs.getString("CTRY");
 				Integer nApparizioni = rs.getInt("EVENTS_PLAYED_ACTUAL");
 				Integer posizioneRanking = rs.getInt("RANKING");
-				Integer totaleIncassiAnno = this.getTotaleIncassiUSA(nome, cognome);//per calcolo incassi posso usare come chiave primaria nomecognomenazionalita
+				Integer totaleIncassiAnno = this.getTotaleIncassiUSA(nome, cognome);
 				Double mediaScore = this.getMediaScoreUSA(nome, cognome);
 				Player p = new Player(nome, cognome, nazione, nApparizioni, posizioneRanking, totaleIncassiAnno, mediaScore);
 				result.add(p);
