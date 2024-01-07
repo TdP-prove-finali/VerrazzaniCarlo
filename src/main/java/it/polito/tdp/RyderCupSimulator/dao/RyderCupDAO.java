@@ -41,19 +41,22 @@ public class RyderCupDAO {
 		}
 	}
 	
-	public List<Player> getAllPlayersEUR(Integer n){
+	public List<Player> getAllPlayersEUR(Integer n, Integer rank){
 		String query = "SELECT * "
 				+ "FROM owgr o "
 				+ "WHERE o.CTRY IN ( "
 				+ "    'Albania', 'Andorra', 'England', 'Northern Ireland', 'Austria', 'Belarus', 'Belgium', 'Bosnia and Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech Republic', 'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland', 'Italy', 'Kazakhstan', 'Kosovo', 'Latvia', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Moldova', 'Monaco', 'Montenegro', 'Netherlands', 'North Macedonia', 'Norway', 'Poland', 'Portugal', 'Romania', 'Russia', 'San Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom', 'Vatican City' "
 				+ ")"
 				+ "AND o.EVENTS_PLAYED_ACTUAL > ? "
+				+ "AND o.RANKING < ? "
 				+ "ORDER BY o.RANKING ";
+		
 		List<Player> result = new ArrayList<Player>();
 		try {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(query);
 			st.setInt(1, n);
+			st.setInt(2, rank);
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
@@ -63,7 +66,13 @@ public class RyderCupDAO {
 				Integer nApparizioni = rs.getInt("EVENTS_PLAYED_ACTUAL");
 				Integer posizioneRanking = rs.getInt("RANKING");
 				Integer totaleIncassiAnno = this.getTotaleIncassiEUR(nome, cognome);
+				if(totaleIncassiAnno == 0) {
+					totaleIncassiAnno = this.getTotaleIncassiUSA(nome, cognome);
+				}
 				Double mediaScore = this.getMediaScoreEUR(nome, cognome);
+				if(mediaScore == 0.0) {
+					mediaScore = this.getMediaScoreUSA(nome, cognome);
+				}
 				Player p = new Player(nome, cognome, nazione, nApparizioni, posizioneRanking, totaleIncassiAnno, mediaScore);
 				result.add(p);
 			}
@@ -76,17 +85,19 @@ public class RyderCupDAO {
 		}
 	}
 	
-	public List<Player> getAllPlayersUSA(Integer n) {
+	public List<Player> getAllPlayersUSA(Integer n, Integer rank) {
 		String query = "SELECT * "
 				+ "FROM owgr o "
 				+ "WHERE o.CTRY = 'United States' "
 				+ "AND o.EVENTS_PLAYED_ACTUAL > ? "
+				+ "AND o.RANKING < ? "
 				+ "ORDER BY o.RANKING ";
 		List<Player> result = new ArrayList<Player>();
 		try {
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st = conn.prepareStatement(query);
 			st.setInt(1, n);
+			st.setInt(2, rank);
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
@@ -96,7 +107,13 @@ public class RyderCupDAO {
 				Integer nApparizioni = rs.getInt("EVENTS_PLAYED_ACTUAL");
 				Integer posizioneRanking = rs.getInt("RANKING");
 				Integer totaleIncassiAnno = this.getTotaleIncassiUSA(nome, cognome);
+				if(totaleIncassiAnno == 0) {
+					totaleIncassiAnno = this.getTotaleIncassiEUR(nome, cognome);
+				}
 				Double mediaScore = this.getMediaScoreUSA(nome, cognome);
+				if(mediaScore == 0.0) {
+					mediaScore = this.getMediaScoreEUR(nome, cognome);
+				}
 				Player p = new Player(nome, cognome, nazione, nApparizioni, posizioneRanking, totaleIncassiAnno, mediaScore);
 				result.add(p);
 			}

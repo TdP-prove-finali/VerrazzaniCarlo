@@ -1,4 +1,3 @@
-
 package it.polito.tdp.RyderCupSimulator.model;
 
 import java.util.ArrayList;
@@ -39,10 +38,10 @@ public class Model {
 		}
 	}
 	
-	public List<Player>loadPlayersEUR(Integer nMinA){//prendo solo players con media diversa da zero(senno è un casino)
+	public List<Player>loadPlayersEUR(Integer nMinA, Integer rankMax){//prendo solo players con media diversa da zero(senno è un casino)
 		//a sto punto mi conviene aggiungere un database nella tabella con gli incassi degli europei(molti hanno 0 $ in PGA)
 		
-		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersEUR(nMinA));
+		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersEUR(nMinA, rankMax));
 		List<Player>disponibili2 = new ArrayList<>(disponibili);
 
 		for(Player p : disponibili2) {
@@ -53,8 +52,8 @@ public class Model {
 		return disponibili;
 	}
 	
-	public List<Player>loadPlayersUSA(Integer nMinA){
-		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersUSA(nMinA));
+	public List<Player>loadPlayersUSA(Integer nMinA, Integer rankMax){
+		List<Player>disponibili = new ArrayList<>(dao.getAllPlayersUSA(nMinA, rankMax));
 		List<Player>disponibili2 = new ArrayList<>(disponibili);
 		for(Player p : disponibili2) {
 			if(p.getMediaScore() <= 0.0) {
@@ -63,9 +62,9 @@ public class Model {
 		}
 		return disponibili;
 	}
-	public List<Player> calcolaTeamEUR(Integer nMinA) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 5 giocatori per ranking e 4 a caso tra i migliori 20(esclusi i primi 5): gli altri 3 sono scelti ricorsivamente
+	public List<Player> calcolaTeamEUR(Integer nMinA, Integer rankMax) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 5 giocatori per ranking e 4 a caso tra i migliori 20(esclusi i primi 5): gli altri 3 sono scelti ricorsivamente
 		this.salarioMaggiore = 0.0;
-		List<Player> rimanenti = new ArrayList<>(this.loadPlayersEUR(nMinA));
+		List<Player> rimanenti = new ArrayList<>(this.loadPlayersEUR(nMinA, rankMax));
 		List<Player> parziale = new ArrayList<>();
 		parziale.add(rimanenti.get(0));//essendo parziale ordinato per ranking: prendo i primi 5.
 		parziale.add(rimanenti.get(1));//prendo inoltre 4 player a caso tra i migliori 20 EUR.
@@ -88,9 +87,9 @@ public class Model {
 		return this.teamEUR;
 	}
 	
-	public List<Player> calcolaTeamUSA(Integer nMinA) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 7 giocatori per ranking: gli altri 5 sono scelti ricorsivamente
+	public List<Player> calcolaTeamUSA(Integer nMinA, Integer rankMax) {//alleggerisco la ricorsione inserendo per ciascun team di default i migliori 7 giocatori per ranking: gli altri 5 sono scelti ricorsivamente
 		this.salarioMaggiore = 0.0;
-		List<Player> rimanenti = new ArrayList<>(this.loadPlayersUSA(nMinA));
+		List<Player> rimanenti = new ArrayList<>(this.loadPlayersUSA(nMinA, rankMax));
 		List<Player> parziale = new ArrayList<>();
 		parziale.add(rimanenti.get(0));
 		parziale.add(rimanenti.get(1));
@@ -497,3 +496,4 @@ public class Model {
 	
 	
 }
+
