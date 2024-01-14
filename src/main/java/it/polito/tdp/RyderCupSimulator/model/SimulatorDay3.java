@@ -42,8 +42,8 @@ public class SimulatorDay3 {
 				
 				//eventi matchDay1
 				for (MatchSingolo x : this.calendarioDay3) {
-					Double scoreEUR = (x.getPlayerEUR().getMediaScore()+Math.random()*5-Math.random()*7);
-					Double scoreUSA = (x.getPlayerUSA().getMediaScore()+Math.random()*5-Math.random()*7);
+					Double scoreEUR = (x.getPlayerEUR().getMediaScore()+Math.random()*3-Math.random()*5);
+					Double scoreUSA = (x.getPlayerUSA().getMediaScore()+Math.random()*3-Math.random()*5);
 					Integer punteggioMatch = (int) (scoreEUR-scoreUSA);
 					x.setScorePlayerEUR(scoreEUR);
 					x.setScorePlayerUSA(scoreUSA);
