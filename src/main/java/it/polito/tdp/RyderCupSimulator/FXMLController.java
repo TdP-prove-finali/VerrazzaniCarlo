@@ -149,7 +149,7 @@ public class FXMLController {
     	try {
     		rank = Integer.parseInt(input2);
 		}catch(NumberFormatException e) {
-			this.txtEUR.setText("Insert a number in field appearances");
+			this.txtEUR.setText("Insert a number in field rank");
 		return;
 		}
     	if(model.loadPlayersEUR(nApparizioni, rank).size()<12) {
@@ -181,7 +181,7 @@ public class FXMLController {
     	try {
     		rank = Integer.parseInt(input2);
 		}catch(NumberFormatException e) {
-			this.txtEUR.setText("Insert a number in field appearances");
+			this.txtUSA.setText("Insert a number in field rank");
 		return;
 		}
     	if(model.loadPlayersUSA(nApparizioni, rank).size()<12) {
@@ -296,6 +296,9 @@ public class FXMLController {
     @FXML
     void doCalcolaStats(ActionEvent event) {
     	String nomeCognome = this.boxPlayer.getValue();
+    	if(nomeCognome==null) {
+    		this.txtStatsPlayer.setText("Select a player!");
+    	}
     	String res = ""; 
     	res = this.model.satsPlayer(nomeCognome);
     	this.txtStatsPlayer.setText(res);
